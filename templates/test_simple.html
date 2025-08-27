@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Simple</title>
+</head>
+<body style="font-family: Arial;">
+    <h1>Test Template</h1>
+    
+    <!-- SIEMPRE MOSTRAR DEBUG -->
+    <div style="background: yellow; padding: 20px; margin: 20px; border: 3px solid red;">
+        <h2>🔍 DEBUG INFO:</h2>
+        <p><strong>Resultados:</strong> {{ resultados|length if resultados else 0 }}</p>
+        <p><strong>Formulario:</strong> "{{ formulario_seleccionado }}"</p>
+        <p><strong>Tipo de resultados:</strong> {{ resultados.__class__.__name__ if resultados else 'None' }}</p>
+        
+        {% if resultados and resultados|length > 0 %}
+        <p><strong>Primer registro completo:</strong></p>
+        <pre>{{ resultados[0] }}</pre>
+        {% endif %}
+    </div>
+    
+    <!-- TABLA SIMPLE SI HAY DATOS -->
+    {% if resultados and resultados|length > 0 %}
+    <div style="margin: 20px;">
+        <h3>TABLA DE DATOS</h3>
+        <table border="1" style="border-collapse: collapse; width: 100%;">
+            {% if formulario_seleccionado == 'alimento' %}
+            <tr style="background: #ccc;">
+                <th>Fecha</th>
+                <th>Frecuencia</th>
+                <th>Estanque</th>
+                <th>Referencia</th>
+                <th>Cantidad</th>
+                <th>Mortalidad</th>
+                <th>Causa</th>
+                <th>Acciones</th>
+            </tr>
+            {% for registro in resultados %}
+            <tr>
+                <td>{{ registro['fecha'] }}</td>
+                <td>{{ registro['frecuencia_toma'] }}</td>
+                <td>{{ registro['estanque_celda'] }}</td>
+                <td>{{ registro['referencia_alimento'] }}</td>
+                <td>{{ registro['cantidad_alimento'] }}</td>
+                <td>{{ registro['mortalidad'] }}</td>
+                <td>{{ registro['causa_mortalidad'] }}</td>
+                <td>{{ registro['acciones_correctivas'] }}</td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <th>Tipo</th>
+                <th>Fecha</th>
+                <th>Datos</th>
+            </tr>
+            {% for registro in resultados %}
+            <tr>
+                <td>{{ registro['tipo'] }}</td>
+                <td>{{ registro['fecha'] }}</td>
+                <td>{{ registro }}</td>
+            </tr>
+            {% endfor %}
+            {% endif %}
+        </table>
+    </div>
+    {% else %}
+    <div style="background: #ffcccc; padding: 20px; margin: 20px;">
+        <h3>NO HAY RESULTADOS</h3>
+    </div>
+    {% endif %}
+</body>
+</html>

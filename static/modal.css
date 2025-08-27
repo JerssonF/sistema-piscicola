@@ -1,0 +1,76 @@
+/* Estilos para modales de éxito */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  min-width: 300px;
+  max-width: 500px;
+}
+
+.modal-header {
+  background-color: #28a745;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px 8px 0 0;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-align: center;
+}
+
+.modal-content {
+  padding: 20px;
+  text-align: center;
+  font-size: 1em;
+  color: #333;
+}
+
+.modal-footer {
+  padding: 15px 20px;
+  text-align: center;
+  border-top: 1px solid #eee;
+}
+
+.modal-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  min-width: 80px;
+}
+
+.modal-button:hover {
+  background-color: #218838;
+}
+
+/* Variante para modal de error */
+.modal-header.error {
+  background-color: #dc3545;
+}
+
+.modal-button.error {
+  background-color: #dc3545;
+}
+
+.modal-button.error:hover {
+  background-color: #c82333;
+}

@@ -1,0 +1,382 @@
+<!-- templates/formulario_alimentos.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>🍽️ Formulario de Alimentos - Piscícola Fish River</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    /* Contenedor neutral alrededor del formulario */
+    .food-container {
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      padding: 30px 20px;
+      border-radius: 15px;
+      max-width: 850px;
+      margin: 40px auto;
+      box-sizing: border-box;
+      box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+    /* Formulario en grid de dos columnas */
+    .food-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    /* Título ocupa ambas columnas */
+    .food-form .titulo-form {
+      grid-column: span 2;
+      margin: 0 0 10px;
+      font-size: 2rem;
+      color: #ffffff;
+      text-align: center;
+    }
+    /* Cada pareja label+input */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      color: #ffffff;
+    }
+    .form-group label {
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 10px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .form-group input[type="date"],
+    .form-group input[type="number"],
+    .form-group select {
+      background-color: #fff;
+      color: #000;
+    }
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    /* Campos que ocupan dos columnas */
+    .full-width {
+      grid-column: span 2;
+    }
+    /* Botón Guardar centrado y en verde */
+    #btn-guardar {
+      grid-column: span 2;
+      background-color: #28a745;
+      color: white;
+      padding: 12px 0;
+      font-size: 1.2em;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      justify-self: center;
+      width: 60%;
+      max-width: 250px;
+      transition: background-color 0.3s ease;
+    }
+    #btn-guardar:hover {
+      background-color: #218838;
+    }
+
+    /* ─── ESTILOS DEL MENÚ DESPLEGABLE ─── */
+    .nav {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+    .menu-btn {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      z-index: 1001; /* Encima del modal */
+    }
+    .menu-btn:hover {
+      background-color: #0069d9;
+    }
+    .menu-list {
+      display: none;
+      list-style: none;
+      padding: 5px;
+      margin-top: 8px;
+      background-color: rgba(0, 0, 0, 0.8);
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      z-index: 1001;
+      min-width: 250px;
+    }
+    .menu-list li {
+      margin: 3px 0;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+    .menu-list li:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      transform: translateX(5px);
+      box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+    }
+    .menu-list a {
+      display: block;
+      color: #fff;
+      text-decoration: none;
+      padding: 12px 15px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+    .menu-list a:hover {
+      background-color: rgba(0, 123, 255, 0.6);
+      color: #ffffff;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    }
+    /* Estilo especial para el formulario actual */
+    .menu-list .current-form {
+      background-color: rgba(40, 167, 69, 0.7);
+      font-weight: bold;
+    }
+    .menu-list .current-form:hover {
+      background-color: rgba(40, 167, 69, 0.9);
+    }
+
+    /* Modal de éxito */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      z-index: 1001;
+      min-width: 300px;
+      max-width: 500px;
+    }
+    .modal-header {
+      background-color: #28a745;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px 8px 0 0;
+      font-size: 1.2em;
+      font-weight: bold;
+      text-align: center;
+    }
+    .modal-content {
+      padding: 20px;
+      text-align: center;
+      font-size: 1em;
+      color: #333;
+    }
+    .modal-footer {
+      padding: 15px 20px;
+      text-align: center;
+      border-top: 1px solid #eee;
+    }
+    .modal-button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      min-width: 80px;
+    }
+    .modal-button:hover {
+      background-color: #218838;
+    }
+
+    /* ─── ESTILOS RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      .food-form {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+      .food-form .titulo-form,
+      .food-form .form-group,
+      .food-form #btn-guardar,
+      .full-width {
+        grid-column: span 1;
+      }
+      /* Asegurarse de que el menú se extienda correctamente */
+      .menu-list {
+        min-width: 200px;
+        padding: 3px;
+      }
+      .menu-list li {
+        margin: 2px 0;
+      }
+      .menu-list a {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- CABECERA -->
+  <header class="header">
+    <h1><i class="fas fa-fish"></i> Piscícola Fish River <i class="fas fa-water"></i></h1>
+  </header>
+
+  <!-- BOTÓN Menú -->
+  <nav class="nav">
+    <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i> Menú</button>
+    <ul id="menu" class="menu-list">
+      <li><a href="{{ url_for('routes.dashboard') }}" class="menu-item"><i class="fas fa-home"></i> Inicio</a></li>
+      <li><a href="{{ url_for('routes.formulario_alimentos') }}" class="menu-item current-form"><i class="fas fa-fish"></i> Formulario de Alimentos</a></li>
+      <li><a href="{{ url_for('routes.formulario_ingreso_alimento') }}" class="menu-item"><i class="fas fa-plus-circle"></i> Formulario de Ingreso de Alimento</a></li>
+      <li><a href="{{ url_for('routes.formulario_muestreo') }}" class="menu-item"><i class="fas fa-microscope"></i> Formulario de Muestreo</a></li>
+      <li><a href="{{ url_for('routes.formulario_parametros') }}" class="menu-item"><i class="fas fa-cogs"></i> Formulario de Parámetros</a></li>
+      <li><a href="{{ url_for('routes.formulario_siembra') }}" class="menu-item"><i class="fas fa-seedling"></i> Formulario de Siembra</a></li>
+      <li><a href="{{ url_for('routes.formulario_informes') }}" class="menu-item"><i class="fas fa-chart-bar"></i> Informes</a></li>
+    </ul>
+  </nav>
+
+  <!-- FORMULARIO EN CONTENEDOR OSCURO -->
+  <div class="food-container">
+    <form id="alimentos-form" method="POST" class="food-form">
+      <h2 class="titulo-form"><i class="fas fa-fish"></i> Formulario de Alimentos</h2>
+
+      <div class="form-group">
+        <label for="fecha"><i class="fas fa-calendar-alt"></i> Fecha:</label>
+        <input type="date" id="fecha" name="fecha" required>
+      </div>
+
+      <div class="form-group">
+        <label for="frecuencia_toma"><i class="fas fa-clock"></i> Frecuencia de la toma de información:</label>
+        <input type="text" id="frecuencia_toma" name="frecuencia_toma" placeholder="Ej: Cada 2 horas" required>
+      </div>
+
+      <div class="form-group">
+        <label for="estanque_celda">Estanque o Celda:</label>
+        <select id="estanque_celda" name="estanque_celda" required>
+          <option value="">-- Selecciona --</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="referencia_alimento">Referencia de Alimento:</label>
+        <input type="text" id="referencia_alimento" name="referencia_alimento" placeholder="Ej: Pellet Premium" required>
+      </div>
+
+      <div class="form-group">
+        <label for="cantidad_alimento">Cantidad de Alimento (kg):</label>
+        <input type="number" step="0.01" id="cantidad_alimento" name="cantidad_alimento" placeholder="0.00" required>
+      </div>
+
+      <div class="form-group">
+        <label for="mortalidad">Mortalidad (peces muertos):</label>
+        <input type="number" id="mortalidad" name="mortalidad" placeholder="0" required>
+      </div>
+
+      <div class="form-group full-width">
+        <label for="causa_mortalidad">Causa de la Mortalidad:</label>
+        <textarea id="causa_mortalidad" name="causa_mortalidad" required></textarea>
+      </div>
+
+      <div class="form-group full-width">
+        <label for="acciones_correctivas">Acciones Correctivas:</label>
+        <textarea id="acciones_correctivas" name="acciones_correctivas" required></textarea>
+      </div>
+
+            <!-- Botón Guardar -->
+      <button type="submit" id="btn-guardar">Guardar</button>
+    </form>
+  </div>
+
+  <!-- Mensajes flash -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        {% if category == 'success' %}
+          <script type="text/javascript">
+            // Función para mostrar el modal con múltiples intentos
+            function tryShowModal() {
+              var modal = document.getElementById('success-modal');
+              var overlay = document.getElementById('modal-overlay');
+              
+              if (modal && overlay) {
+                overlay.style.display = 'block';
+                modal.style.display = 'block';
+                console.log('Modal mostrado exitosamente');
+              } else {
+                console.log('Elementos no encontrados, reintentando...');
+                setTimeout(tryShowModal, 100);
+              }
+            }
+            
+            // Ejecutar inmediatamente y también cuando el DOM esté listo
+            tryShowModal();
+            document.addEventListener('DOMContentLoaded', tryShowModal);
+            window.addEventListener('load', tryShowModal);
+          </script>
+        {% else %}
+          <div class="flash-{{ category }}" style="background-color: #f8d7da; color: #721c24; padding: 10px; margin: 10px; border-radius: 5px;">{{ message }}</div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <!-- Modal de éxito -->
+  <div id="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;"></div>
+  <div id="success-modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index: 1001; min-width: 300px; max-width: 500px;">
+    <div style="background-color: #28a745; color: white; padding: 15px 20px; border-radius: 8px 8px 0 0; font-size: 1.2em; font-weight: bold; text-align: center;">¡Éxito!</div>
+    <div style="padding: 20px; text-align: center; font-size: 1em; color: #333;">Los datos se han guardado correctamente.</div>
+    <div style="padding: 15px 20px; text-align: center; border-top: 1px solid #eee;">
+      <button onclick="closeModal()" style="background-color: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 1em; min-width: 80px;">Aceptar</button>
+    </div>
+  </div>
+
+  <!-- PIE -->
+  <footer>
+    <p>&copy; 2025 Jersson Fabian Buitrago. Todos los derechos reservados.</p>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('menu');
+      if (menu.style.display === 'none' || menu.style.display === '') {
+        menu.style.display = 'block';
+      } else {
+        menu.style.display = 'none';
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('success-modal').style.display = 'none';
+      document.getElementById('modal-overlay').style.display = 'none';
+    }
+  </script>
+</body>
+</html>

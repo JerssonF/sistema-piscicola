@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📊 Informes - Piscícola Fish River</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* HEADER */
+    .header {
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      padding: 1rem 2rem;
+      box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      border-bottom: 3px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .header h1 {
+      color: #ffffff;
+      font-size: 2rem;
+      font-weight: 600;
+      text-align: center;
+      text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.8),
+        0 0 8px rgba(0, 0, 0, 0.6);
+    }
+
+    .header h1 i {
+      color: #00d4aa;
+      text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.8),
+        0 0 10px rgba(0, 212, 170, 0.6);
+      margin: 0 10px;
+    }
+
+    /* NAVEGACIÓN */
+    .nav {
+      position: relative;
+      margin: 1rem 2rem;
+    }
+
+    .menu-btn {
+      background: linear-gradient(135deg, #4a90e2, #357abd);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .menu-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
+    }
+
+    .menu-list {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      list-style: none;
+      min-width: 280px;
+      z-index: 1000;
+      padding: 10px 0;
+      margin-top: 10px;
+    }
+
+    .menu-list.show {
+      display: block;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .menu-list li {
+      margin: 0;
+    }
+
+    .menu-list .menu-item {
+      display: block;
+      padding: 12px 20px;
+      color: #333;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border-radius: 10px;
+      margin: 5px 10px;
+    }
+
+    .menu-list .menu-item:hover {
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+      transform: translateX(5px);
+    }
+
+    .menu-list .menu-item.current-form {
+      background: linear-gradient(135deg, #4a90e2, #357abd);
+      color: white;
+      font-weight: 600;
+    }
+
+    /* CONTENIDO PRINCIPAL */
+    .main-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      padding: 2rem;
+    }
+
+    .form-title {
+      text-align: center;
+      color: #ffffff;
+      font-size: 2.2rem;
+      margin-bottom: 2rem;
+      font-weight: 600;
+      text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.7),
+        0 0 10px rgba(173, 216, 230, 0.5);
+    }
+
+    /* FILTROS DE BÚSQUEDA */
+    .search-container {
+      background: rgba(173, 216, 230, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(173, 216, 230, 0.3);
+      padding: 2rem;
+      border-radius: 15px;
+      margin-bottom: 2rem;
+    }
+
+    .search-title {
+      color: #ffffff;
+      font-size: 1.4rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      text-align: center;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+    }
+
+    .filters-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      align-items: end;
+    }
+
+    @media (max-width: 1200px) {
+      .filters-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .filters-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .filter-group {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .filter-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #495057;
+      font-weight: 600;
+    }
+
+    .filter-group select,
+    .filter-group input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+
+    .filter-group select:focus,
+    .filter-group input:focus {
+      outline: none;
+      border-color: #4a90e2;
+      box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    }
+
+    .search-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4a90e2, #357abd);
+      color: white;
+      box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #6c757d, #5a6268);
+      color: white;
+      box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+    }
+
+    /* RESULTADOS */
+    .results-container {
+      margin-top: 2rem;
+      display: none;
+    }
+
+    .results-container.show {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .results-title {
+      color: #495057;
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .results-table th {
+      background: linear-gradient(135deg, #4a90e2, #357abd);
+      color: white;
+      padding: 15px;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .results-table td {
+      padding: 15px;
+      border-bottom: 1px solid #e9ecef;
+      vertical-align: top;
+      line-height: 1.6;
+    }
+
+    .results-table tr:hover {
+      background: #f8f9fa;
+    }
+
+    .results-table td strong {
+      color: #495057;
+      font-weight: 600;
+    }
+
+    .expand-row {
+      background: #f8f9fa;
+      display: none;
+    }
+    .expand-row td {
+      border-top: none;
+      padding: 18px 30px;
+      font-size: 15px;
+      color: #222;
+    }
+    .expand-btn {
+      cursor: pointer;
+      color: #357abd;
+      font-weight: bold;
+      background: none;
+      border: none;
+      font-size: 1em;
+      padding: 0;
+    }
+
+    /* FILTROS ESPECÍFICOS */
+    .specific-filters {
+      margin-top: 2rem;
+    }
+
+    .specific-filter-group {
+      background: rgba(173, 216, 230, 0.05);
+      border: 1px solid rgba(173, 216, 230, 0.2);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .specific-filter-group h4 {
+      color: #ffffff;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+    }
+
+    .specific-filter-group .filters-grid {
+      margin-bottom: 0;
+    }
+
+    .no-results {
+      text-align: center;
+      color: #6c757d;
+      font-style: italic;
+      padding: 2rem;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .main-container {
+        margin: 1rem;
+        padding: 1rem;
+      }
+
+      .header {
+        padding: 1rem;
+      }
+
+      .header h1 {
+        font-size: 1.5rem;
+      }
+
+      .form-title {
+        font-size: 1.8rem;
+      }
+
+      .filters-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .search-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .btn {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .results-table {
+        font-size: 14px;
+      }
+
+      .results-table th,
+      .results-table td {
+        padding: 10px 8px;
+      }
+    }
+
+    /* MENSAJES */
+    .flash-messages {
+      margin: 1rem 0;
+    }
+
+    .flash-message {
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    .flash-success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .flash-error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="header">
+    <h1><i class="fas fa-fish"></i> Piscícola Fish River <i class="fas fa-water"></i></h1>
+  </header>
+
+  <!-- BOTÓN Menú -->
+  <nav class="nav">
+    <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i> Menú</button>
+    <ul id="menu" class="menu-list">
+      <li><a href="{{ url_for('routes.dashboard') }}" class="menu-item"><i class="fas fa-home"></i> Inicio</a></li>
+      <li><a href="{{ url_for('routes.formulario_alimentos') }}" class="menu-item"><i class="fas fa-fish"></i> Formulario de Alimentos</a></li>
+      <li><a href="{{ url_for('routes.formulario_ingreso_alimento') }}" class="menu-item"><i class="fas fa-plus-circle"></i> Formulario de Ingreso de Alimento</a></li>
+      <li><a href="{{ url_for('routes.formulario_muestreo') }}" class="menu-item"><i class="fas fa-microscope"></i> Formulario de Muestreo</a></li>
+      <li><a href="{{ url_for('routes.formulario_parametros') }}" class="menu-item"><i class="fas fa-cogs"></i> Formulario de Parámetros</a></li>
+      <li><a href="{{ url_for('routes.formulario_siembra') }}" class="menu-item"><i class="fas fa-seedling"></i> Formulario de Siembra</a></li>
+      <li><a href="{{ url_for('routes.formulario_informes') }}" class="menu-item current-form"><i class="fas fa-chart-bar"></i> Informes</a></li>
+    </ul>
+  </nav>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="main-container">
+    <h2 class="form-title"><i class="fas fa-chart-bar"></i> Sistema de Informes</h2>
+
+    <!-- MENSAJES FLASH -->
+    <div class="flash-messages">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash-message flash-{{ category }}"><i class="fas fa-info-circle"></i> {{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    </div>
+
+    <!-- FILTROS DE BÚSQUEDA -->
+    <div class="search-container">
+      <h3 class="search-title"><i class="fas fa-search"></i> Filtros de Búsqueda</h3>
+      
+      <form method="POST" action="{{ url_for('routes.formulario_informes') }}">
+        <div class="filters-grid">
+          <div class="filter-group">
+            <label for="formulario"><i class="fas fa-list"></i> Tipo de Formulario:</label>
+            <select name="formulario" id="formulario" onchange="mostrarFiltrosEspecificos()">
+              <option value="">📋 Todos los formularios</option>
+              <option value="alimento" {{ 'selected' if request.form.get('formulario') == 'alimento' }}>🐟 Alimentos</option>
+              <option value="ingreso_alimentos" {{ 'selected' if request.form.get('formulario') == 'ingreso_alimentos' }}>➕ Ingreso de Alimentos</option>
+              <option value="muestreo" {{ 'selected' if request.form.get('formulario') == 'muestreo' }}>🔬 Muestreo</option>
+              <option value="parametros" {{ 'selected' if request.form.get('formulario') == 'parametros' }}>⚙️ Parámetros</option>
+              <option value="siembra" {{ 'selected' if request.form.get('formulario') == 'siembra' }}>🌱 Siembra</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="fecha_desde"><i class="fas fa-calendar-alt"></i> Fecha Desde:</label>
+            <input type="date" name="fecha_desde" id="fecha_desde" value="{{ request.form.get('fecha_desde', '') }}">
+          </div>
+
+          <div class="filter-group">
+            <label for="fecha_hasta"><i class="fas fa-calendar-check"></i> Fecha Hasta:</label>
+            <input type="date" name="fecha_hasta" id="fecha_hasta" value="{{ request.form.get('fecha_hasta', '') }}">
+          </div>
+
+          <div class="filter-group">
+            <label for="estanque"><i class="fas fa-fish"></i> Estanque/Celda:</label>
+            <select name="estanque" id="estanque">
+              <option value="">🏊 Todos los estanques</option>
+              <option value="1" {{ 'selected' if request.form.get('estanque') == '1' }}>🔵 Estanque 1</option>
+              <option value="2" {{ 'selected' if request.form.get('estanque') == '2' }}>🟢 Estanque 2</option>
+              <option value="3" {{ 'selected' if request.form.get('estanque') == '3' }}>🟡 Estanque 3</option>
+              <option value="4" {{ 'selected' if request.form.get('estanque') == '4' }}>🔴 Estanque 4</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- FILTROS ESPECÍFICOS POR FORMULARIO -->
+        <div class="specific-filters">
+          <!-- Filtros específicos para Alimentos -->
+          <div id="filtros-alimento" class="specific-filter-group" style="display: none;">
+            <h4><i class="fas fa-fish"></i> Filtros Específicos para Alimentos</h4>
+            <div class="filters-grid">
+              <div class="filter-group">
+                <label for="referencia_alimento"><i class="fas fa-tag"></i> Referencia de Alimento:</label>
+                <input type="text" name="referencia_alimento" id="referencia_alimento" 
+                       placeholder="Ej: Pellet Premium" value="{{ request.form.get('referencia_alimento', '') }}">
+              </div>
+              <div class="filter-group">
+                <label for="cantidad_min"><i class="fas fa-weight"></i> Cantidad Mínima (kg):</label>
+                <input type="number" name="cantidad_min" id="cantidad_min" step="0.01" 
+                       placeholder="0.00" value="{{ request.form.get('cantidad_min', '') }}">
+              </div>
+              <div class="filter-group">
+                <label for="cantidad_max"><i class="fas fa-weight"></i> Cantidad Máxima (kg):</label>
+                <input type="number" name="cantidad_max" id="cantidad_max" step="0.01" 
+                       placeholder="100.00" value="{{ request.form.get('cantidad_max', '') }}">
+              </div>
+              <div class="filter-group">
+                <label for="mortalidad_filter"><i class="fas fa-skull-crossbones"></i> Con Mortalidad:</label>
+                <select name="mortalidad_filter" id="mortalidad_filter">
+                  <option value="">Todos</option>
+                  <option value="si" {{ 'selected' if request.form.get('mortalidad_filter') == 'si' }}>Solo con mortalidad</option>
+                  <option value="no" {{ 'selected' if request.form.get('mortalidad_filter') == 'no' }}>Sin mortalidad</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filtros específicos para Muestreo -->
+          <div id="filtros-muestreo" class="specific-filter-group" style="display: none;">
+            <h4><i class="fas fa-microscope"></i> Filtros Específicos para Muestreo</h4>
+            <div class="filters-grid">
+              <div class="filter-group">
+                <label for="especie"><i class="fas fa-dna"></i> Especie:</label>
+                <input type="text" name="especie" id="especie" 
+                       placeholder="Ej: Tilapia" value="{{ request.form.get('especie', '') }}">
+              </div>
+              <div class="filter-group">
+                <label for="peces_min"><i class="fas fa-fish"></i> Mínimo de Peces:</label>
+                <input type="number" name="peces_min" id="peces_min" 
+                       placeholder="0" value="{{ request.form.get('peces_min', '') }}">
+              </div>
+              <div class="filter-group">
+                <label for="biomasa_min"><i class="fas fa-weight"></i> Biomasa Mínima (kg):</label>
+                <input type="number" name="biomasa_min" id="biomasa_min" step="0.01" 
+                       placeholder="0.00" value="{{ request.form.get('biomasa_min', '') }}">
+              </div>
+            </div>
+          </div>
+
+          <!-- Filtros específicos para Parámetros -->
+          <div id="filtros-parametros" class="specific-filter-group" style="display: none;">
+            <h4><i class="fas fa-cogs"></i> Filtros Específicos para Parámetros</h4>
+            <div class="filters-grid">
+              <div class="filter-group">
+                <label for="oxigeno_min"><i class="fas fa-wind"></i> Oxígeno Mínimo:</label>
+                <input type="number" name="oxigeno_min" id="oxigeno_min" step="0.01" 
+                       placeholder="0.00" value="{{ request.form.get('oxigeno_min', '') }}">
+              </div>
+              <div class="filter-group">
+                <label for="temperatura_min"><i class="fas fa-thermometer-half"></i> Temp. Mínima (°C):</label>
+                <input type="number" name="temperatura_min" id="temperatura_min" step="0.1" 
+                       placeholder="0.0" value="{{ request.form.get('temperatura_min', '') }}">
+              </div>
+              <div class="filter-group">
+                <label for="ph_min"><i class="fas fa-flask"></i> pH Mínimo:</label>
+                <input type="number" name="ph_min" id="ph_min" step="0.1" 
+                       placeholder="0.0" value="{{ request.form.get('ph_min', '') }}">
+              </div>
+              <div class="filter-group">
+                <label for="ph_max"><i class="fas fa-flask"></i> pH Máximo:</label>
+                <input type="number" name="ph_max" id="ph_max" step="0.1" 
+                       placeholder="14.0" value="{{ request.form.get('ph_max', '') }}">
+              </div>
+            </div>
+          </div>
+
+          <!-- Filtros específicos para Siembra -->
+          <div id="filtros-siembra" class="specific-filter-group" style="display: none;">
+            <h4><i class="fas fa-seedling"></i> Filtros Específicos para Siembra</h4>
+            <div class="filters-grid">
+              <div class="filter-group">
+                <label for="especie_siembra"><i class="fas fa-dna"></i> Especie:</label>
+                <select name="especie_siembra" id="especie_siembra">
+                  <option value="">Todas las especies</option>
+                  <option value="Tilapia" {{ 'selected' if request.form.get('especie_siembra') == 'Tilapia' }}>🐟 Tilapia</option>
+                  <option value="Carpa" {{ 'selected' if request.form.get('especie_siembra') == 'Carpa' }}>🐠 Carpa</option>
+                  <option value="Trucha" {{ 'selected' if request.form.get('especie_siembra') == 'Trucha' }}>🐡 Trucha</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label for="destino_siembra"><i class="fas fa-arrow-right"></i> Destino:</label>
+                <select name="destino_siembra" id="destino_siembra">
+                  <option value="">Todos los destinos</option>
+                  <option value="Engorde" {{ 'selected' if request.form.get('destino_siembra') == 'Engorde' }}>🔄 Engorde</option>
+                  <option value="Reproduccion" {{ 'selected' if request.form.get('destino_siembra') == 'Reproduccion' }}>💝 Reproducción</option>
+                  <option value="Venta" {{ 'selected' if request.form.get('destino_siembra') == 'Venta' }}>💰 Venta</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label for="tipo_sexo"><i class="fas fa-venus-mars"></i> Tipo:</label>
+                <select name="tipo_sexo" id="tipo_sexo">
+                  <option value="">Todos</option>
+                  <option value="Solo Hembras" {{ 'selected' if request.form.get('tipo_sexo') == 'Solo Hembras' }}>♀️ Solo Hembras</option>
+                  <option value="Solo Machos" {{ 'selected' if request.form.get('tipo_sexo') == 'Solo Machos' }}>♂️ Solo Machos</option>
+                  <option value="Mixto" {{ 'selected' if request.form.get('tipo_sexo') == 'Mixto' }}>⚥ Mixto</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filtros específicos para Ingreso de Alimentos -->
+          <div id="filtros-ingreso-alimentos" class="specific-filter-group" style="display: none;">
+            <h4><i class="fas fa-plus-circle"></i> Filtros Específicos para Ingreso de Alimentos</h4>
+            <div class="filters-grid">
+              <div class="filter-group">
+                <label for="tipo_ingreso"><i class="fas fa-box"></i> Tipo de Ingreso:</label>
+                <select name="tipo_ingreso" id="tipo_ingreso">
+                  <option value="">Todos los tipos</option>
+                  <option value="Normal" {{ 'selected' if request.form.get('tipo_ingreso') == 'Normal' }}>✅ Normal</option>
+                  <option value="Urgente" {{ 'selected' if request.form.get('tipo_ingreso') == 'Urgente' }}>🚨 Urgente</option>
+                  <option value="Programado" {{ 'selected' if request.form.get('tipo_ingreso') == 'Programado' }}>📅 Programado</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label for="transporte_tipo"><i class="fas fa-truck"></i> Tipo de Transporte:</label>
+                <select name="transporte_tipo" id="transporte_tipo">
+                  <option value="">Todos</option>
+                  <option value="Normal" {{ 'selected' if request.form.get('transporte_tipo') == 'Normal' }}>🚛 Normal</option>
+                  <option value="Refrigerado" {{ 'selected' if request.form.get('transporte_tipo') == 'Refrigerado' }}>❄️ Refrigerado</option>
+                  <option value="Express" {{ 'selected' if request.form.get('transporte_tipo') == 'Express' }}>⚡ Express</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="search-buttons">
+          <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Buscar Información</button>
+          <button type="button" class="btn btn-secondary" onclick="limpiarFiltros()"><i class="fas fa-eraser"></i> Limpiar Filtros</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- RESULTADOS -->
+    {% if resultados and resultados|length > 0 %}
+    <div class="results-container show">
+      <h3 class="results-title"><i class="fas fa-table"></i> Resultados de la Búsqueda ({{ resultados|length }} registros encontrados)</h3>
+      <!-- DEBUG: Mostrar formulario seleccionado -->
+      <p style="color: red; font-weight: bold;">DEBUG: formulario_seleccionado = "{{ formulario_seleccionado }}"</p>
+      
+      {% if resultados|length > 0 %}
+        <table class="results-table">
+          <thead>
+            <tr>
+              {% if formulario_seleccionado == 'alimento' %}
+                <th><i class="fas fa-calendar"></i> Fecha</th>
+                <th><i class="fas fa-map-marker-alt"></i> Estanque/Celda</th>
+                <th><i class="fas fa-tag"></i> Referencia</th>
+                <th><i class="fas fa-weight"></i> Cantidad (kg)</th>
+                <th><i class="fas fa-clock"></i> Frecuencia</th>
+                <th><i class="fas fa-skull-crossbones"></i> Mortalidad</th>
+                <th><i class="fas fa-info-circle"></i> Detalles</th>
+              {% elif formulario_seleccionado == 'ingreso_alimentos' %}
+                <th><i class="fas fa-calendar"></i> Fecha</th>
+                <th><i class="fas fa-map-marker-alt"></i> Estanque/Celda</th>
+                <th><i class="fas fa-box"></i> Tipo Ingreso</th>
+                <th><i class="fas fa-weight"></i> Cantidad (kg)</th>
+                <th><i class="fas fa-clock"></i> Hora</th>
+                <th><i class="fas fa-truck"></i> Transporte</th>
+                <th><i class="fas fa-info-circle"></i> Detalles</th>
+              {% elif formulario_seleccionado == 'muestreo' %}
+                <th><i class="fas fa-calendar"></i> Fecha</th>
+                <th><i class="fas fa-map-marker-alt"></i> Estanque/Celda</th>
+                <th><i class="fas fa-dna"></i> Especie</th>
+                <th><i class="fas fa-fish"></i> Peces</th>
+                <th><i class="fas fa-weight"></i> Biomasa (kg)</th>
+                <th><i class="fas fa-balance-scale"></i> Peso Promedio (g)</th>
+                <th><i class="fas fa-info-circle"></i> Detalles</th>
+              {% elif formulario_seleccionado == 'parametros' %}
+                <th><i class="fas fa-calendar"></i> Fecha</th>
+                <th><i class="fas fa-map-marker-alt"></i> Estanque/Celda</th>
+                <th><i class="fas fa-wind"></i> Oxígeno</th>
+                <th><i class="fas fa-thermometer-half"></i> Temperatura (°C)</th>
+                <th><i class="fas fa-flask"></i> pH</th>
+                <th><i class="fas fa-vial"></i> Amonio</th>
+                <th><i class="fas fa-info-circle"></i> Detalles</th>
+              {% elif formulario_seleccionado == 'siembra' %}
+                <th><i class="fas fa-calendar"></i> Fecha</th>
+                <th><i class="fas fa-map-marker-alt"></i> Estanque/Celda</th>
+                <th><i class="fas fa-dna"></i> Especie</th>
+                <th><i class="fas fa-arrow-right"></i> Destino</th>
+                <th><i class="fas fa-egg"></i> Ovas/Alevinos</th>
+                <th><i class="fas fa-venus-mars"></i> Tipo</th>
+                <th><i class="fas fa-info-circle"></i> Detalles</th>
+              {% else %}
+                <th><i class="fas fa-list"></i> Formulario</th>
+                <th><i class="fas fa-calendar-alt"></i> Fecha</th>
+                <th><i class="fas fa-fish"></i> Estanque/Celda</th>
+                <th><i class="fas fa-info-circle"></i> Detalles</th>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for registro in resultados %}
+            <!-- DEBUG: {{ registro }} -->
+            <tr class="main-row" onclick="toggleExpand(this)">
+              {% if formulario_seleccionado == 'alimento' %}
+                <td><i class="fas fa-calendar"></i> {{ registro['fecha'].strftime('%d/%m/%Y') if registro['fecha'] else 'N/A' }}</td>
+                <td><i class="fas fa-map-marker-alt"></i> {{ registro['estanque_celda'] or 'N/A' }}</td>
+                <td>{{ registro['referencia_alimento'] or 'N/A' }}</td>
+                <td>{{ "{:.2f}".format(registro['cantidad_alimento']) if registro['cantidad_alimento'] else '0.00' }}</td>
+                <td>{{ registro['frecuencia_toma'] or 'N/A' }}</td>
+                <td>{{ registro['mortalidad'] or '0' }}</td>
+                <td><button class="expand-btn" title="Ver detalles"><i class="fas fa-chevron-down"></i></button></td>
+              {% elif formulario_seleccionado == 'ingreso_alimentos' %}
+                <td><i class="fas fa-calendar"></i> {{ registro['fecha'].strftime('%d/%m/%Y') if registro['fecha'] else 'N/A' }}</td>
+                <td><i class="fas fa-map-marker-alt"></i> {{ registro['estanque_celda'] or 'N/A' }}</td>
+                <td>{{ registro['ingreso_comida'] or 'N/A' }}</td>
+                <td>{{ "{:.2f}".format(registro['cantidad']) if registro['cantidad'] else '0.00' }}</td>
+                <td>{{ registro['hora'] or 'N/A' }}</td>
+                <td>{{ registro['transporte'] or 'N/A' }}</td>
+                <td><button class="expand-btn" title="Ver detalles"><i class="fas fa-chevron-down"></i></button></td>
+              {% elif formulario_seleccionado == 'muestreo' %}
+                <td><i class="fas fa-calendar"></i> {{ registro['fecha'].strftime('%d/%m/%Y') if registro['fecha'] else 'N/A' }}</td>
+                <td><i class="fas fa-map-marker-alt"></i> {{ registro['estanque_celda'] or 'N/A' }}</td>
+                <td>{{ registro['especie'] or 'N/A' }}</td>
+                <td>{{ registro['peces'] or '0' }}</td>
+                <td>{{ "{:.2f}".format(registro['biomasa']) if registro['biomasa'] else '0.00' }}</td>
+                <td>{{ "{:.2f}".format(registro['peso_promedio_g']) if registro['peso_promedio_g'] else '0.00' }}</td>
+                <td><button class="expand-btn" title="Ver detalles"><i class="fas fa-chevron-down"></i></button></td>
+              {% elif formulario_seleccionado == 'parametros' %}
+                <td><i class="fas fa-calendar"></i> {{ registro['fecha'].strftime('%d/%m/%Y') if registro['fecha'] else 'N/A' }}</td>
+                <td><i class="fas fa-map-marker-alt"></i> {{ registro['estanque_celda'] or 'N/A' }}</td>
+                <td>{{ "{:.2f}".format(registro['oxigeno']) if registro['oxigeno'] else '0.00' }}</td>
+                <td>{{ "{:.1f}".format(registro['temperatura']) if registro['temperatura'] else '0.0' }}</td>
+                <td>{{ "{:.1f}".format(registro['ph']) if registro['ph'] else '0.0' }}</td>
+                <td>{{ "{:.2f}".format(registro['amonio']) if registro['amonio'] else '0.00' }}</td>
+                <td><button class="expand-btn" title="Ver detalles"><i class="fas fa-chevron-down"></i></button></td>
+              {% elif formulario_seleccionado == 'siembra' %}
+                <td><i class="fas fa-calendar"></i> {{ registro['fecha'].strftime('%d/%m/%Y') if registro['fecha'] else 'N/A' }}</td>
+                <td><i class="fas fa-map-marker-alt"></i> {{ registro['estanque_celda'] or 'N/A' }}</td>
+                <td>{{ registro['especie'] or 'N/A' }}</td>
+                <td>{{ registro['destino'] or 'N/A' }}</td>
+                <td>{{ registro['ovas_alevinos'] or '0' }}</td>
+                <td>{{ registro['hembras_machos'] or 'N/A' }}</td>
+                <td><button class="expand-btn" title="Ver detalles"><i class="fas fa-chevron-down"></i></button></td>
+              {% else %}
+                <td>
+                  {% if registro['tipo'] == 'alimento' %}<i class="fas fa-fish"></i> Alimentos
+                  {% elif registro['tipo'] == 'ingreso_alimentos' %}<i class="fas fa-plus-circle"></i> Ingreso de Alimentos
+                  {% elif registro['tipo'] == 'muestreo' %}<i class="fas fa-microscope"></i> Muestreo
+                  {% elif registro['tipo'] == 'parametros' %}<i class="fas fa-cogs"></i> Parámetros
+                  {% elif registro['tipo'] == 'siembra' %}<i class="fas fa-seedling"></i> Siembra
+                  {% endif %}
+                </td>
+                <td><i class="fas fa-calendar"></i> {{ registro['fecha'].strftime('%d/%m/%Y') if registro['fecha'] else 'N/A' }}</td>
+                <td><i class="fas fa-map-marker-alt"></i> {{ registro['estanque_celda'] if registro['estanque_celda'] else 'N/A' }}</td>
+                <td><button class="expand-btn" title="Ver detalles"><i class="fas fa-chevron-down"></i></button></td>
+              {% endif %}
+            </tr>
+            <tr class="expand-row">
+              <td colspan="{% if formulario_seleccionado and formulario_seleccionado != 'todos' %}7{% else %}4{% endif %}">
+                <div>
+                  {% if registro['tipo'] == 'alimento' %}
+                    <b>Causa Mortalidad:</b> {{ registro['causa_mortalidad'] or 'N/A' }}<br>
+                    <b>Acciones Correctivas:</b> {{ registro['acciones_correctivas'] or 'N/A' }}<br>
+                    <b>Fecha Registro:</b> {{ registro['fecha_registro'] or 'N/A' }}
+                  {% elif registro['tipo'] == 'ingreso_alimentos' %}
+                    <b>Observaciones:</b> {{ registro['observaciones'] or 'N/A' }}<br>
+                    <b>Fecha Registro:</b> {{ registro['fecha_registro'] or 'N/A' }}
+                  {% elif registro['tipo'] == 'muestreo' %}
+                    <b>Promedio Total:</b> {{ "{:.2f}".format(registro['promedio_total_g']) if registro['promedio_total_g'] else '0.00' }} g<br>
+                    <b>Acciones Correctivas:</b> {{ registro['acciones_correctivas'] or 'N/A' }}<br>
+                    <b>Fecha Registro:</b> {{ registro['fecha_registro'] or 'N/A' }}
+                  {% elif registro['tipo'] == 'parametros' %}
+                    <b>Observaciones:</b> {{ registro['observaciones'] or 'N/A' }}<br>
+                    <b>Fecha Registro:</b> {{ registro['fecha_registro'] or 'N/A' }}
+                  {% elif registro['tipo'] == 'siembra' %}
+                    <b>Peso Promedio:</b> {{ "{:.2f}".format(registro['peso_promedio']) if registro['peso_promedio'] else '0.00' }}<br>
+                    <b>Biomasa:</b> {{ "{:.2f}".format(registro['biomasa']) if registro['biomasa'] else '0.00' }}<br>
+                    <b>Acciones Correctivas:</b> {{ registro['acciones_correctivas'] or 'N/A' }}<br>
+                    <b>Fecha Registro:</b> {{ registro['fecha_registro'] or 'N/A' }}
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <div class="no-results">
+          <i class="fas fa-search"></i> No se encontraron registros con los filtros seleccionados.
+        </div>
+      {% endif %}
+    </div>
+    {% else %}
+    <div class="results-container">
+      <div class="no-results">
+        <i class="fas fa-info-circle"></i> Realice una búsqueda para ver los resultados.
+      </div>
+    </div>
+    {% endif %}
+  </main>
+
+  <script>
+    function toggleExpand(row) {
+      const expand = row.nextElementSibling;
+      if (expand && expand.classList.contains('expand-row')) {
+        expand.style.display = expand.style.display === 'table-row' ? 'none' : 'table-row';
+        // Cambiar icono
+        const icon = row.querySelector('.expand-btn i');
+        if (icon) {
+          icon.className = expand.style.display === 'table-row' ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
+        }
+      }
+    }
+    function toggleMenu() {
+      const menu = document.getElementById('menu');
+      menu.classList.toggle('show');
+    }
+
+    function limpiarFiltros() {
+      document.getElementById('formulario').value = '';
+      document.getElementById('fecha_desde').value = '';
+      document.getElementById('fecha_hasta').value = '';
+      document.getElementById('estanque').value = '';
+      
+      // Limpiar filtros específicos
+      const specificInputs = document.querySelectorAll('.specific-filter-group input, .specific-filter-group select');
+      specificInputs.forEach(input => {
+        input.value = '';
+      });
+      
+      // Ocultar todos los filtros específicos
+      mostrarFiltrosEspecificos();
+    }
+
+    function mostrarFiltrosEspecificos() {
+      const formularioSeleccionado = document.getElementById('formulario').value;
+      
+      // Ocultar todos los filtros específicos
+      const allFilters = document.querySelectorAll('.specific-filter-group');
+      allFilters.forEach(filter => {
+        filter.style.display = 'none';
+      });
+      
+      // Mostrar solo el filtro correspondiente
+      if (formularioSeleccionado) {
+        const filtroEspecifico = document.getElementById(`filtros-${formularioSeleccionado.replace('_', '-')}`);
+        if (filtroEspecifico) {
+          filtroEspecifico.style.display = 'block';
+        }
+      }
+    }
+
+    // Cerrar menú si se hace clic fuera
+    document.addEventListener('click', function(event) {
+      const menu = document.getElementById('menu');
+      const menuBtn = document.querySelector('.menu-btn');
+      
+      if (!menu.contains(event.target) && !menuBtn.contains(event.target)) {
+        menu.classList.remove('show');
+      }
+    });
+
+    // Establecer fecha máxima como hoy y mostrar filtros al cargar
+    document.addEventListener('DOMContentLoaded', function() {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('fecha_desde').max = today;
+      document.getElementById('fecha_hasta').max = today;
+      
+      // Mostrar filtros específicos si hay un formulario seleccionado
+      mostrarFiltrosEspecificos();
+    });
+  </script>
+</body>
+</html>

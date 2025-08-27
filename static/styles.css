@@ -1,0 +1,237 @@
+/*=====================================================================================
+   Fondo y estilo global mejorado con tema acuático
+=====================================================================================*/
+@import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&display=swap');
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: url('images/fondo.jpeg') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    text-align: center;
+    box-sizing: border-box;
+    padding-top: 40px;
+    position: relative;
+}
+
+/* Overlay sutil para mejorar legibilidad del texto sin afectar la imagen */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1); /* Solo un overlay muy sutil para legibilidad */
+    z-index: -1;
+}
+
+/*=====================================================================================
+   Estilos del título (header) mejorado para fondo de imagen
+=====================================================================================*/
+.header {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 1rem 2rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.header h1 {
+    font-size: 3.5em;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.8),
+        0 0 10px rgba(255, 255, 255, 0.3);
+    margin: 0;
+    letter-spacing: 2px;
+    color: #ffffff;
+    background: none !important;      /* Quita fondo azul */
+    display: inline-block;            /* Ajusta ancho al texto */
+    text-shadow:
+        0 0 8px rgba(0,0,0,0.9),
+        0 0 16px rgba(0,255,255,0.6);
+    margin-top: -10px;
+    margin-bottom: 20px;
+    padding: 0;                        /* Sin padding */
+}
+
+/*=====================================================================================
+   Estilos del menú (botón y lista desplegable)
+=====================================================================================*/
+.nav {
+    position: absolute;
+    top: 30px;
+    left: 20px;
+    background: transparent !important; /* Menú transparente */
+    box-shadow: none !important;       /* Sin sombra */
+}
+.menu-btn {
+    background-color: #1E90FF;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+}
+.menu-btn:hover {
+    background-color: #4682B4;
+}
+.menu-list {
+    display: none;
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+    background: transparent !important; /* Lista transparente */
+    box-shadow: none !important;        /* Sin sombra */
+}
+.menu-item {
+    text-decoration: none;
+    display: block;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.5); /* Sutil contraste */
+    font-size: 1.2em;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    text-shadow: 0 0 4px rgba(0,0,0,0.8);
+}
+.menu-item:hover {
+    background-color: rgba(30,144,255,0.8);
+}
+
+/*=====================================================================================
+   Estilos del login
+=====================================================================================*/
+.login-container h2 {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding-top: 20px;
+}
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    padding: 30px 40px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 500px;
+    box-sizing: border-box;
+    margin-bottom: 40px;
+}
+
+.login-container form label {
+    font-size: 1.2em;
+    color: #ffffff;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    text-align: center;
+    width: 100%;
+}
+
+.login-container form input[type="text"],
+.login-container form input[type="password"] {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px;
+    font-size: 1.2em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    margin: 5px 0;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.login-container form button {
+    background-color: #28a745;
+    color: white;
+    padding: 15px 30px;
+    font-size: 1.2em;
+    font-weight: bold;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 60%;
+    max-width: 300px;
+    transition: background-color 0.3s ease;
+}
+.login-container form button:hover {
+    background-color: #218838;
+}
+
+/*=====================================================================================
+   Estilo para el botón "Ingresar" en el index
+=====================================================================================*/
+#btn-login-index {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    display: block;
+    width: 60%;
+    max-width: 300px;
+    margin: 20px auto;
+}
+#btn-login-index:hover {
+    background-color: #218838;
+}
+
+/*=====================================================================================
+   FORMULARIO DE INGRESO DE ALIMENTO EN DOS COLUMNAS
+=====================================================================================*/
+/* ... resto sin cambios ... */
+
+/*=====================================================================================
+   Pie de página siempre al final
+=====================================================================================*/
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #fff;
+    padding: 10px 0;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+/*=====================================================================================
+   Ajuste específico: párrafo de bienvenida en dashboard
+=====================================================================================*/
+.welcome-paragraph {
+    color: #ffffff !important;
+}

@@ -1,0 +1,453 @@
+<!-- templates/formulario_ingreso_alimento.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🍽️ Ingreso de Alimento - Piscícola Fish River</title>
+  <!-- Apunta a tu CSS principal -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  <style>
+    /* ====== Estilos adaptados para este formulario ====== */
+
+    /* Contenedor del menú desplegable */
+    .nav {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+
+    /* Botón de menú */
+    .menu-btn {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      z-index: 1001; /* Encima del modal */
+    }
+    .menu-btn:hover {
+      background-color: #0069d9;
+    }
+
+    /* Lista desplegable ocultada por defecto */
+    .menu-list {
+      display: none;
+      list-style: none;
+      padding: 5px;
+      margin-top: 8px;
+      background-color: rgba(0, 0, 0, 0.8);
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      z-index: 1001;
+      min-width: 250px;
+    }
+    .menu-list li {
+      margin: 3px 0;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+    .menu-list li:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      transform: translateX(5px);
+      box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+    }
+    .menu-list a {
+      display: block;
+      color: #fff;
+      text-decoration: none;
+      padding: 12px 15px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+    .menu-list a:hover {
+      background-color: rgba(0, 123, 255, 0.6);
+      color: #ffffff;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    }
+    /* Estilo especial para el formulario actual */
+    .menu-list .current-form {
+      background-color: rgba(40, 167, 69, 0.7);
+      font-weight: bold;
+    }
+    .menu-list .current-form:hover {
+      background-color: rgba(40, 167, 69, 0.9);
+    }
+
+    /* Título grande “Piscícola Fish River” */
+    .header h1 {
+      font-size: 4em;
+      font-weight: bold;
+      color: #ffffff;
+      text-shadow:
+        0 0 15px rgba(231, 245, 245, 0.8),
+        0 0 30px rgba(0, 255, 255, 0.6),
+        0 0 45px rgba(0, 255, 255, 0.4);
+      margin-top: -10px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    /* -----------------------------------------
+       ESTILOS DEL FORMULARIO COMO GRID DOS COLUMNAS
+       ----------------------------------------- */
+
+    form {
+      background: rgba(0, 0, 0, 0.3); /* Fondo neutral semitransparente */
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      padding: 20px 30px;
+      border-radius: 15px;
+      width: 80%;           /* Ocupa máximo el 80% del body */
+      max-width: 900px;     /* No más de 900px */
+      box-sizing: border-box;
+      display: grid;
+      grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
+      grid-gap: 20px;                /* Espacio entre celdas */
+      margin-bottom: 40px;           /* Margen bajo el formulario */
+      box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    /* H2 que se inserta DENTRO del form y ocupa ambas columnas */
+    form .titulo-form {
+      grid-column: span 2;       /* Ocupa dos columnas */
+      margin: 0;
+      padding-bottom: 15px;      /* Separación inferior */
+      font-size: 2rem;
+      color: #ffffff;
+      text-align: center;
+    }
+
+    /* Etiqueta (label) va sobre su campo */
+    form label {
+      font-size: 1rem;
+      margin-bottom: 6px;
+      color: #ffffff;
+      display: block;
+    }
+
+    /* Campos (input, textarea, select) ocupan 100% de la celda */
+    form input,
+    form textarea,
+    form select {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: none;
+      box-sizing: border-box;
+      background-color: #ffffff;
+      color: #000000;
+      transition: box-shadow 0.2s ease;
+    }
+    form input:focus,
+    form textarea:focus,
+    form select:focus {
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.9);
+      outline: none;
+    }
+
+    /* Inputs tipo fecha y hora específicos */
+    form input[type="date"],
+    form input[type="time"] {
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    /* El textarea debe ocupar ambas columnas */
+    form textarea {
+      grid-column: span 2;
+      resize: vertical;
+      height: 100px;
+    }
+
+    /* Botón “Guardar” dentro del form, ocupa ambas columnas y centra */
+    #btn-guardar {
+      background-color: #28a745;
+      color: #ffffff;
+      padding: 12px 30px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      grid-column: span 2;     /* Ocupa 2 columnas */
+      justify-self: center;     /* Centrado horizontal */
+      margin-top: 10px;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+    #btn-guardar:hover {
+      background-color: #218838;
+      transform: translateY(-2px);
+    }
+    #btn-guardar:active {
+      transform: translateY(0);
+    }
+
+    /* FLASH-ERROR: solo para mostrar errores, si los hubiera */
+    .flash-error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      text-align: center;
+      font-size: 1rem;
+      grid-column: span 2; /* Ocupa ambas columnas */
+    }
+
+    /* Modal de éxito igual que en el otro formulario */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #f4f4f4;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      width: 300px;
+      text-align: center;
+      z-index: 1000;
+    }
+    .modal-header {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #28a745;
+    }
+    .modal-content {
+      font-size: 1.2rem;
+      color: #333;
+      margin: 15px 0;
+    }
+    .modal-footer {
+      margin-top: 10px;
+    }
+    .modal-button {
+      background-color: #28a745;
+      color: white;
+     	padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .modal-button:hover {
+      background-color: #218838;
+    }
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+
+    /* Pie de página ligeramente separado */
+    footer {
+      width: 100%;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #fff;
+      padding: 10px 0;
+      margin-top: auto; /* Empuja el footer hacia abajo */
+    }
+
+    /* Responsive: en pantallas <600px, el form pasa a 1 columna */
+    @media (max-width: 600px) {
+      form {
+        grid-template-columns: 1fr; /* Una sola columna */
+      }
+      form textarea,
+      form #btn-guardar,
+      .flash-error {
+        grid-column: span 1;       /* Ahora abarca 1 sola fila */
+      }
+      /* Asegurarse de que el menú se extienda correctamente */
+      .menu-list {
+        min-width: 200px;
+        padding: 3px;
+      }
+      .menu-list li {
+        margin: 2px 0;
+      }
+      .menu-list a {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- ───────────────────────────
+       MENÚ DESPLEGABLE
+       ─────────────────────────── -->
+  <nav class="nav">
+    <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i> Menú</button>
+    <ul id="menu" class="menu-list">
+      <li><a href="{{ url_for('routes.dashboard') }}" class="menu-item"><i class="fas fa-home"></i> Inicio</a></li>
+      <li><a href="{{ url_for('routes.formulario_alimentos') }}" class="menu-item"><i class="fas fa-fish"></i> Formulario de Alimentos</a></li>
+      <li><a href="{{ url_for('routes.formulario_ingreso_alimento') }}" class="menu-item current-form"><i class="fas fa-plus-circle"></i> Formulario de Ingreso de Alimento</a></li>
+      <li><a href="{{ url_for('routes.formulario_muestreo') }}" class="menu-item"><i class="fas fa-microscope"></i> Formulario de Muestreo</a></li>
+      <li><a href="{{ url_for('routes.formulario_parametros') }}" class="menu-item"><i class="fas fa-cogs"></i> Formulario de Parámetros</a></li>
+      <li><a href="{{ url_for('routes.formulario_siembra') }}" class="menu-item"><i class="fas fa-seedling"></i> Formulario de Siembra</a></li>
+      <li><a href="{{ url_for('routes.formulario_informes') }}" class="menu-item"><i class="fas fa-chart-bar"></i> Informes</a></li>
+    </ul>
+  </nav>
+  <!-- ───────────────────────────
+       FIN MENÚ DESPLEGABLE
+       ─────────────────────────── -->
+
+
+  <!-- ───────────────────────────
+       CABECERA PRINCIPAL
+       ─────────────────────────── -->
+  <header class="header">
+    <h1><i class="fas fa-fish"></i> Piscícola Fish River <i class="fas fa-water"></i></h1>
+  </header>
+  <!-- ───────────────────────────
+       FIN CABECERA
+       ─────────────────────────── -->
+
+
+  <!-- ───────────────────────────
+       FORMULARIO DE INGRESO DE ALIMENTO
+       (el subtítulo <h2> va dentro del form)
+       ─────────────────────────── -->
+  <form method="POST">
+    <!-- 1) Subtítulo dentro del fondo semitransparente, ocupa 2 columnas -->
+    <h2 class="titulo-form"><i class="fas fa-plus-circle"></i> Formulario de Ingreso de Alimento</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          {% if category == 'success' %}
+            <script>
+              setTimeout(function() {
+                var modal = document.getElementById('success-modal');
+                var overlay = document.getElementById('modal-overlay');
+                if (modal && overlay) {
+                  modal.style.display = 'block';
+                  overlay.style.display = 'block';
+                }
+              }, 500);
+            </script>
+          {% endif %}
+          {% if category == 'error' %}
+            <div class="flash-error">{{ message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- FILA 1: Fecha + Hora -->
+    <div class="form-group">
+      <label for="fecha"><i class="fas fa-calendar-alt"></i> Fecha:</label>
+      <input type="date" id="fecha" name="fecha" required />
+    </div>
+    <div class="form-group">
+      <label for="hora"><i class="fas fa-clock"></i> Hora:</label>
+      <input type="time" id="hora" name="hora" required />
+    </div>
+
+    <!-- FILA 2: Ingreso de Comida + Cantidad -->
+    <div class="form-group">
+      <label for="ingreso_comida">Ingreso de Comida:</label>
+      <input
+        type="text"
+        id="ingreso_comida"
+        name="ingreso_comida"
+        placeholder="Ej: Pellet Premium"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="cantidad">Cantidad (kg):</label>
+      <input
+        type="number"
+        step="0.01"
+        id="cantidad"
+        name="cantidad"
+        placeholder="0.00"
+        required
+      />
+    </div>
+
+    <!-- FILA 3: Transporte + Observaciones -->
+    <div class="form-group">
+      <label for="transporte">Transporte:</label>
+      <input
+        type="text"
+        id="transporte"
+        name="transporte"
+        placeholder="Ej: Camión refrigerado"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="observaciones"><i class="fas fa-comment"></i> Observaciones:</label>
+      <textarea
+        id="observaciones"
+        name="observaciones"
+        rows="4"
+        placeholder="Comentarios adicionales (opcional)"
+      ></textarea>
+    </div>
+
+    <!-- BOTÓN GUARDAR ocupa 2 columnas y está centrado -->
+    <button type="submit" id="btn-guardar">Guardar</button>
+  </form>
+  <!-- FIN FORMULARIO -->
+
+
+  <!-- ───────────────────────────
+       MODAL DE ÉXITO
+       ─────────────────────────── -->
+  <div id="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;"></div>
+  <div id="success-modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); z-index: 1001; min-width: 300px; max-width: 500px;">
+    <div style="background-color: #28a745; color: white; padding: 15px 20px; border-radius: 8px 8px 0 0; font-size: 1.2em; font-weight: bold; text-align: center;">¡Éxito!</div>
+    <div style="padding: 20px; text-align: center; font-size: 1em; color: #333;">Los datos se han guardado correctamente.</div>
+    <div style="padding: 15px 20px; text-align: center; border-top: 1px solid #eee;">
+      <button onclick="closeModal()" style="background-color: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 1em; min-width: 80px;">Aceptar</button>
+    </div>
+  </div>
+
+
+  <!-- ───────────────────────────
+       PIE DE PÁGINA
+       ─────────────────────────── -->
+  <footer>
+    <p>&copy; 2025 Jersson Fabian Buitrago. Todos los derechos reservados.</p>
+  </footer>
+
+
+  <script>
+    function closeModal() {
+      document.getElementById('success-modal').style.display = 'none';
+      document.getElementById('modal-overlay').style.display = 'none';
+    }
+
+    function toggleMenu() {
+      const menu = document.getElementById('menu');
+      if (menu.style.display === 'none' || menu.style.display === '') {
+        menu.style.display = 'block';
+      } else {
+        menu.style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>
