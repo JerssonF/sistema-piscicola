@@ -202,7 +202,6 @@ backdrop-filter: blur(20px); /* Aumentar para más nitidez */
 ## 📞 Contacto
 
 **Desarrollador:** JerssonF  
-**Email:** [jersson.piscicola@gmail.com](mailto:jersson.piscicola@gmail.com)  
 **GitHub:** [@JerssonF](https://github.com/JerssonF)
 
 ## 📄 Licencia
