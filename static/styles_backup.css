@@ -1,0 +1,317 @@
+/*=====================================================================================
+   Fondo y estilo global mejorado con tema acuático
+=====================================================================================*/
+@import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&display=swap');
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: url('images/fondo.jpeg') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    text-align: center;
+    box-sizing: border-box;
+    padding-top: 40px;
+    position: relative;
+}
+
+/* Overlay sutil para mejorar legibilidad del texto sin afectar la imagen */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1); /* Solo un overlay muy sutil para legibilidad */
+    z-index: -1;
+}
+
+/*=====================================================================================
+   Estilos del título (header) mejorado para fondo de imagen
+=====================================================================================*/
+.header {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 1rem 2rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.header h1 {
+    font-size: 3.5em;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.8),
+        0 0 10px rgba(255, 255, 255, 0.3);
+    margin: 0;
+    letter-spacing: 2px;
+    color: #ffffff;
+    background: none !important;      /* Quita fondo azul */
+    display: inline-block;            /* Ajusta ancho al texto */
+    text-shadow:
+        0 0 8px rgba(0,0,0,0.9),
+        0 0 16px rgba(0,255,255,0.6);
+    margin-top: -10px;
+    margin-bottom: 20px;
+    padding: 0;                        /* Sin padding */
+}
+
+/*=====================================================================================
+   Estilos del menú (botón y lista desplegable)
+=====================================================================================*/
+.nav {
+    position: absolute;
+    top: 30px;
+    left: 20px;
+    background: transparent !important; /* Menú transparente */
+    box-shadow: none !important;       /* Sin sombra */
+}
+.menu-btn {
+    background-color: #1E90FF;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+}
+.menu-list {
+    display: none;
+    position: absolute;
+    top: 45px;
+    left: 0;
+    background: rgba(0, 0, 0, 0.9);
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1000;
+    border-radius: 5px;
+}
+.menu-list a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+.menu-list a:hover {
+    background-color: #1E90FF;
+}
+.nav:hover .menu-list {
+    display: block;
+}
+
+/*=====================================================================================
+   Estilos para los contenedores de formularios con tema de transparencia
+=====================================================================================*/
+.container, .form-container {
+    background: rgba(0, 0, 0, 0.3);      /* Fondo semi-transparente oscuro */
+    backdrop-filter: blur(15px);         /* Efecto de desenfoque */
+    border: 2px solid rgba(255, 255, 255, 0.2); /* Borde semi-transparente */
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin: 1rem auto;
+    width: 90%;
+    max-width: 900px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+/*=====================================================================================
+   Estilos mejorados para formularios con campos que destacan
+=====================================================================================*/
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-control, input, select, textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 1rem;
+}
+
+.form-control:focus, input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+}
+
+/* Placeholder text styling */
+::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/*=====================================================================================
+   Estilos para botones con diseño moderno y efectos hover
+=====================================================================================*/
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    margin: 0.25rem;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(45deg, #0056b3, #004085);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+}
+
+.btn-secondary {
+    background: linear-gradient(45deg, #6c757d, #545b62);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(45deg, #545b62, #3d4142);
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background: linear-gradient(45deg, #28a745, #1e7e34);
+    color: white;
+}
+
+.btn-success:hover {
+    background: linear-gradient(45deg, #1e7e34, #155724);
+    transform: translateY(-2px);
+}
+
+/*=====================================================================================
+   Estilos para tablas con mejor legibilidad
+=====================================================================================*/
+.table-wrapper {
+    overflow-x: auto;
+    margin: 1rem 0;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.results-table, table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    background: transparent;
+}
+
+.results-table th,
+.results-table td,
+table th,
+table td {
+    padding: 0.75rem;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.results-table th,
+table th {
+    background: rgba(0, 123, 255, 0.3);
+    font-weight: 600;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.results-table tbody tr,
+table tbody tr {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.results-table tbody tr:nth-child(even),
+table tbody tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.results-table tbody tr:hover,
+table tbody tr:hover {
+    background: rgba(0, 123, 255, 0.2);
+}
+
+/*=====================================================================================
+   Cards para mejor organización visual
+=====================================================================================*/
+.card {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    backdrop-filter: blur(10px);
+}
+
+.card-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #007bff;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/*=====================================================================================
+   Estilo para el botón "Ingresar" en el index
+=====================================================================================*/
+#btn-login-index {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    display: block;
+    width: 60%;
+    max-width: 300px;
+    margin: 20px auto;
+}
+#btn-login-index:hover {
+    background-color: #218838;
+}
+
+/*=====================================================================================
+   FORMULARIO DE INGRESO DE ALIMENTO EN DOS COLUMNAS
+=====================================================================================*/
+/* ... resto sin cambios ... */
+
+/*=====================================================================================
+   Pie de página siempre al final
+=====================================================================================*/
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #fff;
+    padding: 10px 0;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+/*=====================================================================================
+   Ajuste específico: párrafo de bienvenida en dashboard
+=====================================================================================*/
+.welcome-paragraph {
+    color: #ffffff !important;
+}

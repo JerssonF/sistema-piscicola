@@ -2,29 +2,34 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 import mysql.connector
 from mysql.connector import Error
 import datetime
+import sys
+import os
+
+# Agregar el directorio raíz al path para importar database_config
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from database_config import DatabaseConfig
 
 bp = Blueprint('routes', __name__)
 
 # ---------------------------------------
-# Conexión a la base de datos
+# Conexión a la base de datos (Mejorada para red)
 # ---------------------------------------
 def get_db_connection():
-	try:
-		conn = mysql.connector.connect(
-			host='localhost',
-			port=3306,
-			user='root',
-			password='',
-			database='piscicola',
-			autocommit=True,
-			use_unicode=True,
-			charset='utf8'
-		)
-		print("✅ Conectado a la base de datos.")
-		return conn
-	except Error as e:
-		print(f"❌ Error de conexión: {e}")
-		return None
+    """
+    Conexión mejorada con soporte para red local
+    Usa DatabaseConfig con failover automático
+    """
+    try:
+        conn = DatabaseConfig.get_connection()
+        if conn and conn.is_connected():
+            print("✅ Conectado a la base de datos (servidor en red)")
+            return conn
+        else:
+            print("❌ No se pudo establecer conexión")
+            return None
+    except Exception as e:
+        print(f"❌ Error de conexión a base de datos: {e}")
+        return None
 
 # ---------------------------------------
 # Ruta principal (índice)
@@ -369,7 +374,7 @@ def formulario_informes():
 							query += " AND estanque_celda LIKE %s"
 							params.append(f"%{estanque}%")
 						
-						# Ordenar por fecha descendente
+						# Ordenar por fecha descendente (más reciente primero)
 						query += " ORDER BY fecha DESC"
 						
 						cursor.execute(query, params)
@@ -380,9 +385,9 @@ def formulario_informes():
 					except Exception as e:
 						continue
 				
-				# Ordenar todos los resultados por fecha descendente
+				# Ordenar todos los resultados por fecha descendente (más reciente primero)
 				if resultados:
-					resultados.sort(key=lambda x: x.get('fecha') or datetime.date.min, reverse=True)
+					resultados.sort(key=lambda x: x.get('fecha') if x.get('fecha') else datetime.date.min, reverse=True)
 				
 			except Exception as e:
 				pass

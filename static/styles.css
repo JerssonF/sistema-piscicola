@@ -1,27 +1,36 @@
 /*=====================================================================================
-   Fondo y estilo global mejorado con tema acuático
+   📱 SISTEMA PISCÍCOLA - CSS RESPONSIVE PARA MÓVILES Y DESKTOP
+   Optimizado para todas las pantallas: móvil, tablet y desktop
 =====================================================================================*/
 @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&display=swap');
+
+/* ===== CONFIGURACIÓN BASE ===== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+}
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: url('images/fondo.jpeg') no-repeat center center fixed;
     background-size: cover;
     color: white;
-    margin: 0;
-    padding: 0;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: start;
     text-align: center;
-    box-sizing: border-box;
-    padding-top: 40px;
+    padding: 10px;
     position: relative;
 }
 
-/* Overlay sutil para mejorar legibilidad del texto sin afectar la imagen */
+/* Overlay para legibilidad */
 body::before {
     content: "";
     position: fixed;
@@ -29,61 +38,153 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.1); /* Solo un overlay muy sutil para legibilidad */
+    background: rgba(0, 0, 0, 0.2);
     z-index: -1;
 }
 
-/*=====================================================================================
-   Estilos del título (header) mejorado para fondo de imagen
-=====================================================================================*/
+/* ===== HEADER RESPONSIVE ===== */
 .header {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(10px);
     border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 15px;
-    padding: 1rem 2rem;
+    padding: 1rem;
     margin-bottom: 1rem;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 1200px;
 }
 
 .header h1 {
-    font-size: 3.5em;
+    font-size: 2rem;
     font-weight: bold;
-    color: #ffffff;
-    text-shadow: 
-        2px 2px 4px rgba(0, 0, 0, 0.8),
-        0 0 10px rgba(255, 255, 255, 0.3);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
     margin: 0;
-    letter-spacing: 2px;
-    color: #ffffff;
-    background: none !important;      /* Quita fondo azul */
-    display: inline-block;            /* Ajusta ancho al texto */
-    text-shadow:
-        0 0 8px rgba(0,0,0,0.9),
-        0 0 16px rgba(0,255,255,0.6);
-    margin-top: -10px;
-    margin-bottom: 20px;
-    padding: 0;                        /* Sin padding */
+    line-height: 1.2;
+/* ===== CONTENEDORES PRINCIPALES ===== */
+.container, .form-container {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin: 0.5rem auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    max-width: 1200px;
 }
 
-/*=====================================================================================
-   Estilos del menú (botón y lista desplegable)
-=====================================================================================*/
+/* ===== FORMULARIOS RESPONSIVE ===== */
+.form-group {
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-col {
+    flex: 1;
+    min-width: 250px;
+}
+
+.form-control, select, input[type="text"], input[type="number"], 
+input[type="date"], input[type="time"], textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, select:focus, input:focus, textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+}
+
+/* Placeholder styling */
+::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* ===== BOTONES RESPONSIVE ===== */
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    margin: 0.25rem;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    min-width: 120px;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    color: white;
+    border: 2px solid transparent;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(45deg, #0056b3, #004085);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+}
+
+.btn-secondary {
+    background: linear-gradient(45deg, #6c757d, #545b62);
+    color: white;
+    border: 2px solid transparent;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(45deg, #545b62, #3d4142);
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background: linear-gradient(45deg, #28a745, #1e7e34);
+    color: white;
+}
+
+.btn-success:hover {
+    background: linear-gradient(45deg, #1e7e34, #155724);
+    transform: translateY(-2px);
+}
+
+/* ===== MENÚ NAVEGACIÓN ===== */
 .nav {
     position: absolute;
-    top: 30px;
+    top: 20px;
     left: 20px;
-    background: transparent !important; /* Menú transparente */
-    box-shadow: none !important;       /* Sin sombra */
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    z-index: 1000;
 }
+
 .menu-btn {
-    background-color: #1E90FF;
+    background: linear-gradient(45deg, #1E90FF, #0066CC);
     color: white;
-    padding: 10px 20px;
-    font-size: 1.2em;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 8px;
     border: none;
+    font-weight: 600;
 }
 .menu-btn:hover {
     background-color: #4682B4;
@@ -227,6 +328,243 @@ footer {
     color: #fff;
     padding: 10px 0;
     background: rgba(0, 0, 0, 0.4);
+}
+
+/* ===== TABLAS RESPONSIVE ===== */
+.table-responsive {
+    overflow-x: auto;
+    margin: 1rem 0;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    -webkit-overflow-scrolling: touch;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 0;
+    background: transparent;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    min-width: 600px;
+}
+
+.table th,
+.table td {
+    padding: 0.75rem 0.5rem;
+    vertical-align: middle;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+    white-space: nowrap;
+}
+
+.table th {
+    background: rgba(0, 123, 255, 0.3);
+    font-weight: 600;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.table tbody tr {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.table tbody tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.table tbody tr:hover {
+    background: rgba(0, 123, 255, 0.2);
+}
+
+/* ===== MEDIA QUERIES PARA RESPONSIVE ===== */
+
+/* Tablets (768px y arriba) */
+@media (min-width: 768px) {
+    html {
+        font-size: 18px;
+    }
+    
+    .header h1 {
+        font-size: 2.5rem;
+    }
+    
+    .form-row {
+        flex-wrap: nowrap;
+    }
+    
+    .form-col {
+        min-width: unset;
+    }
+    
+    .table {
+        font-size: 1rem;
+    }
+    
+    .btn {
+        min-width: 150px;
+    }
+    
+    .nav {
+        top: 30px;
+        left: 30px;
+    }
+}
+
+/* Desktop (1024px y arriba) */
+@media (min-width: 1024px) {
+    body {
+        padding: 20px;
+    }
+    
+    .header h1 {
+        font-size: 3rem;
+    }
+    
+    .container, .form-container {
+        padding: 2rem;
+    }
+    
+    .table th,
+    .table td {
+        padding: 1rem;
+        white-space: normal;
+    }
+}
+
+/* Móviles pequeños (hasta 480px) */
+@media (max-width: 480px) {
+    html {
+        font-size: 14px;
+    }
+    
+    body {
+        padding: 5px;
+    }
+    
+    .header {
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .header h1 {
+        font-size: 1.5rem;
+        line-height: 1.1;
+    }
+    
+    .container, .form-container {
+        padding: 1rem;
+        margin: 0.25rem auto;
+    }
+    
+    .form-row {
+        gap: 0.5rem;
+    }
+    
+    .form-col {
+        min-width: 100%;
+    }
+    
+    .btn {
+        width: 100%;
+        margin: 0.25rem 0;
+        min-width: unset;
+        padding: 1rem;
+        font-size: 1rem;
+    }
+    
+    .nav {
+        position: relative;
+        top: auto;
+        left: auto;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    
+    .menu-btn {
+        width: 100%;
+        padding: 1rem;
+    }
+    
+    .table {
+        font-size: 0.8rem;
+        min-width: 500px;
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.5rem 0.25rem;
+        font-size: 0.75rem;
+    }
+    
+    /* Indicador de scroll para móviles */
+    .table-responsive {
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 8px;
+    }
+    
+    .table-responsive::after {
+        content: "⬅ Desliza para ver más ➡";
+        display: block;
+        text-align: center;
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.7);
+        padding: 0.5rem;
+        background: rgba(0, 0, 0, 0.3);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Ajustar dropdowns en móvil */
+    .dropdown-content {
+        position: relative;
+        display: block;
+        min-width: 100%;
+        margin-top: 0.5rem;
+    }
+}
+
+/* Móviles muy pequeños (hasta 360px) */
+@media (max-width: 360px) {
+    .header h1 {
+        font-size: 1.2rem;
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.25rem;
+        font-size: 0.7rem;
+    }
+    
+    .form-control, select, input, textarea {
+        font-size: 16px; /* Previene zoom en iOS */
+        padding: 1rem;
+    }
+}
+
+/* ===== MEJORAS PARA DISPOSITIVOS TÁCTILES ===== */
+@media (hover: none) and (pointer: coarse) {
+    .btn {
+        min-height: 44px;
+        touch-action: manipulation;
+    }
+    
+    .form-control, select, input {
+        min-height: 44px;
+        font-size: 16px;
+    }
+    
+    .table th,
+    .table td {
+        min-height: 44px;
+    }
+    
+    /* Mejorar hover en touch */
+    .btn:active {
+        transform: translateY(1px);
+        opacity: 0.8;
+    }
 }
 
 /*=====================================================================================
