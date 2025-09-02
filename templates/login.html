@@ -28,7 +28,7 @@
             overflow: hidden;                   /* Evitar scroll */
         }
 
-        /* Overlay sutil para contraste - MÁS NEUTRAL */
+        /* Overlay para mejor contraste - MÁS TRANSPARENTE */
         body::before {
             content: "";
             position: fixed;
@@ -36,36 +36,36 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(37, 50, 56, 0.15);
+            background: rgba(0, 0, 0, 0.2);     /* Overlay más transparente */
             z-index: -1;
         }
 
-        /* Contenedor principal - MÁS AMPLIO */
+        /* Contenedor principal - MÁS TRANSPARENTE */
         .login-container {
-            background: rgba(76, 76, 76, 0.03);
-            backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.25);       /* Fondo más transparente */
+            backdrop-filter: blur(20px);           /* Desenfoque mantenido */
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(200, 200, 200, 0.08);
-            border-radius: 20px;                
-            padding: 25px 45px;                 /* Padding más amplio a los lados */
+            border: 2px solid rgba(255, 255, 255, 0.2); /* Borde más visible */
+            border-radius: 16px;                
+            padding: 25px 35px;                    /* Padding reducido */
             width: 100%;
-            max-width: 500px;                   /* Ancho máximo aumentado significativamente */
+            max-width: 420px;                      /* Ancho máximo reducido */
             box-shadow: 
-                0 12px 25px rgba(0, 0, 0, 0.08),
-                inset 0 1px 0 rgba(200, 200, 200, 0.05);
+                0 15px 30px rgba(0, 0, 0, 0.2),   /* Sombra más suave */
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
             position: relative;
             overflow: hidden;
         }
 
-        /* Título principal */
+        /* Título principal - TAMAÑO REDUCIDO */
         .login-title {
             text-align: center;
-            color: #D4D4D4;
-            font-size: 2.2rem;                 /* Título más grande */
-            font-weight: 700;
-            margin-bottom: 8px;                /* Margen ajustado */
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
-            letter-spacing: 0.5px;             /* Espaciado reducido */
+            color: #FFFFFF;                     /* Blanco puro para mayor contraste */
+            font-size: 2.2rem;                 /* Título más pequeño */
+            font-weight: 800;                  /* Más grueso */
+            margin-bottom: 6px;                
+            text-shadow: 3px 3px 12px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 255, 255, 0.3);
+            letter-spacing: 1px;               /* Mayor espaciado para legibilidad */
         }
 
         .login-title i {
@@ -74,61 +74,62 @@
             filter: drop-shadow(0 0 10px rgba(168, 168, 168, 0.3));
         }
 
-        /* Subtítulo */
+        /* Subtítulo - TAMAÑO REDUCIDO */
         .login-subtitle {
             text-align: center;
-            color: rgba(200, 200, 200, 0.9);
-            font-size: 1.1rem;                 /* Fuente más grande */
-            margin-bottom: 20px;               /* Margen ajustado */
-            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
-            font-weight: 400;
+            color: #FFFFFF;                     /* Blanco puro */
+            font-size: 1.1rem;                 /* Fuente más pequeña */
+            margin-bottom: 15px;               
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+            font-weight: 500;                  /* Más grueso */
         }
 
-        /* Texto de bienvenida */
+        /* Texto de bienvenida - TAMAÑO REDUCIDO */
         .welcome-section {
             text-align: center;
-            margin-bottom: 15px;               /* Margen reducido */
+            margin-bottom: 12px;               /* Margen reducido */
         }
 
         .welcome-icon {
             color: rgba(180, 180, 180, 0.9);
-            font-size: 2.2rem;                 /* Icono más pequeño */
-            margin-bottom: 5px;                /* Margen reducido */
+            font-size: 1.8rem;                 /* Icono más pequeño */
+            margin-bottom: 4px;                /* Margen reducido */
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
         }
 
         .welcome-text {
-            color: rgba(200, 200, 200, 0.95);
-            font-size: 1.1rem;                 /* Texto más grande */
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-            line-height: 1.4;                  /* Interlineado ajustado */
+            color: #FFFFFF;                     /* Blanco puro */
+            font-size: 1.1rem;                 /* Texto más pequeño */
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+            line-height: 1.3;                  
+            font-weight: 500;                  /* Más grueso */
         }
 
         /* Formulario - MÁS COMPACTO */
         .login-form {
             display: flex;
             flex-direction: column;
-            gap: 15px;                          /* Gap reducido */
+            gap: 12px;                          /* Gap reducido */
         }
 
         /* Grupos de campos - MÁS COMPACTO */
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 6px;                           /* Gap reducido */
+            gap: 5px;                           /* Gap reducido */
         }
 
-        /* Labels - MÁS COMPACTAS */
+        /* Labels - MÁS VISIBLES Y COMPACTOS */
         .form-label {
-            color: rgba(180, 180, 180, 0.95);
-            font-weight: 600;
-            font-size: 1.1rem;                /* Fuente más grande */
+            color: #FFFFFF;                     /* Blanco puro */
+            font-weight: 700;                  /* Más grueso */
+            font-size: 1.1rem;                 /* Fuente más pequeña */
             text-transform: uppercase;
-            letter-spacing: 0.8px;             /* Espaciado ajustado */
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            letter-spacing: 1px;               /* Mayor espaciado */
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
             display: flex;
             align-items: center;
-            gap: 8px;                          /* Gap reducido */
+            gap: 8px;                          /* Separación reducida con iconos */
         }
 
         .form-label i {
@@ -136,60 +137,64 @@
             font-size: 1rem;                   /* Icono más pequeño */
         }
 
-        /* Campos de entrada - MÁS COMPACTOS */
+        /* Campos de entrada - MÁS TRANSPARENTES */
         .form-input {
-            background: rgba(120, 120, 120, 0.04);
+            background: rgba(255, 255, 255, 0.08);    /* Fondo más transparente */
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(160, 160, 160, 0.12);
-            border-radius: 12px;               /* Bordes menos redondeados */
-            padding: 14px 18px;                /* Padding ajustado */
-            color: #E0E0E0;
-            font-size: 1.1rem;                 /* Fuente más grande */
+            border: 2px solid rgba(255, 255, 255, 0.3); /* Borde más visible */
+            border-radius: 10px;               
+            padding: 14px 18px;                /* Padding reducido */
+            color: #FFFFFF;                    /* Texto blanco puro */
+            font-size: 1.1rem;                 /* Fuente más pequeña */
+            font-weight: 500;                  /* Texto más grueso */
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             outline: none;
             width: 100%;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Sombra para el texto */
         }
 
         .form-input::placeholder {
-            color: rgba(180, 180, 180, 0.5);
+            color: rgba(255, 255, 255, 0.6);   /* Placeholder más visible */
             font-style: italic;
+            font-weight: 400;
         }
 
         .form-input:focus {
-            border-color: rgba(160, 160, 160, 0.25);
-            background: rgba(120, 120, 120, 0.06);
+            border-color: rgba(255, 255, 255, 0.6); /* Borde más visible en foco */
+            background: rgba(255, 255, 255, 0.15);  /* Fondo más visible en foco */
             box-shadow: 
-                0 0 0 3px rgba(160, 160, 160, 0.05),
-                0 8px 25px rgba(0, 0, 0, 0.1);
+                0 0 0 4px rgba(255, 255, 255, 0.1),
+                0 12px 30px rgba(0, 0, 0, 0.2);
             transform: translateY(-2px);
         }
 
-        /* Botón de login - COLOR VERDE */
+        /* Botón de login - MÁS VISIBLE Y COMPACTO */
         .login-button {
-            background: linear-gradient(135deg, #4CAF50, #45a049); /* Color verde */
+            background: linear-gradient(135deg, #4CAF50, #45a049); 
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(76, 175, 80, 0.3);   /* Borde verde */
-            border-radius: 12px;               
-            color: #ffffff;                     /* Texto blanco */
-            padding: 16px 28px;                /* Padding aumentado */
-            font-size: 1.2rem;                 /* Fuente más grande */
-            font-weight: 700;
+            border: 2px solid rgba(76, 175, 80, 0.4);   /* Borde más grueso */
+            border-radius: 10px;               
+            color: #ffffff;                     
+            padding: 16px 28px;                /* Padding reducido */
+            font-size: 1.2rem;                 /* Fuente más pequeña */
+            font-weight: 800;                  /* Más grueso */
             text-transform: uppercase;
-            letter-spacing: 1.5px;             
+            letter-spacing: 1.5px;             /* Espaciado reducido */
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
-            margin-top: 8px;                   
-            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3); /* Sombra verde */
+            margin-top: 12px;                   
+            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.4); /* Sombra más compacta */
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);    /* Sombra en el texto */
         }
 
         .login-button:hover {
             background: linear-gradient(135deg, #45a049, #388e3c); /* Verde más oscuro al hover */
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(76, 175, 80, 0.4);      /* Sombra verde más intensa */
+            transform: translateY(-2px);      /* Movimiento reducido */
+            box-shadow: 0 12px 25px rgba(76, 175, 80, 0.4);      /* Sombra verde más compacta */
             border-color: rgba(76, 175, 80, 0.4);
         }
 
@@ -197,12 +202,12 @@
             transform: translateY(-1px);
         }
 
-        /* Mensajes de error - MÁS COMPACTOS */
+        /* Mensajes de error - MÁS TRANSPARENTES */
         .alert {
-            background: rgba(255, 193, 7, 0.03);
+            background: rgba(255, 193, 7, 0.02);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 193, 7, 0.15);
+            border: 1px solid rgba(255, 193, 7, 0.2);
             border-radius: 10px;               /* Bordes menos redondeados */
             color: rgba(255, 255, 255, 0.95);
             padding: 12px;                     /* Padding reducido */
@@ -219,14 +224,14 @@
             font-size: 1.1rem;
         }
 
-        /* Footer interno */
+        /* Footer interno - MÁS COMPACTO */
         .login-footer {
             text-align: center;
             color: rgba(170, 170, 170, 0.7);
-            font-size: 0.8rem;                 /* Fuente más pequeña */
-            margin-top: 15px;                  /* Margen reducido */
+            font-size: 0.75rem;                /* Fuente más pequeña */
+            margin-top: 12px;                  /* Margen reducido */
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-            line-height: 1.3;                  /* Interlineado más compacto */
+            line-height: 1.2;                  /* Interlineado más compacto */
         }
 
         .login-footer i {
