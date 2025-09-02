@@ -1,386 +1,422 @@
 <!DOCTYPE html>
-<html lan        /* Contenedor principal del login */
-        .login-wrapper {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.3),
-                0 0 0 1px rgba(255, 255, 255, 0.1);
-            padding: 0;
-            width: 100%;
-            max-width: 450px;
-            overflow: hidden;
-            position: relative;
-        }>
+<html lang="es">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🐟 Login - Piscícola Fish River</title>
+    <title>🐟 Login - Sistema de Gestión</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* ===== ESTILOS ESPECÍFICOS PARA LOGIN ===== */
-        body {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            background: url('{{ url_for("static", filename="images/fondo.jpeg") }}') no-repeat center center fixed;
-            background-size: cover;
-        }
-
-        /* Overlay mejorado */
-        body::before {
-            background: rgba(0, 0, 0, 0.4);
-        }
-
-        /* Contenedor principal del login */
-        .login-wrapper {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(25px);
-            border-radius: 20px;
-            box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.2),
-                0 0 0 1px rgba(255, 255, 255, 0.3);
-            padding: 0;
-            width: 100%;
-            max-width: 450px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* Header del login */
-        .login-header {
-            background: linear-gradient(135deg, rgba(0, 123, 255, 0.8) 0%, rgba(0, 86, 179, 0.9) 100%);
-            color: white;
-            text-align: center;
-            padding: 2rem 1.5rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .login-header::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 10px,
-                rgba(255, 255, 255, 0.05) 10px,
-                rgba(255, 255, 255, 0.05) 20px
-            );
-            animation: wave 20s linear infinite;
-        }
-
-        @keyframes wave {
-            0% { transform: translateX(-50%) translateY(-50%) rotate(0deg); }
-            100% { transform: translateX(-50%) translateY(-50%) rotate(360deg); }
-        }
-
-        .login-header h1 {
-            font-size: 2rem;
+        /* Reset y configuración base */
+        * {
             margin: 0;
-            font-weight: 700;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            position: relative;
-            z-index: 1;
-        }
-
-        .login-header .subtitle {
-            font-size: 0.9rem;
-            opacity: 0.9;
-            margin-top: 0.5rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Área del formulario */
-        .login-body {
-            padding: 2rem 1.5rem;
-            background: white;
-        }
-
-        .welcome-text {
-            text-align: center;
-            color: #444;
-            margin-bottom: 2rem;
-            font-size: 1.1rem;
-        }
-
-        .welcome-text i {
-            color: #007bff;
-            font-size: 3rem;
-            display: block;
-            margin-bottom: 1rem;
-        }
-
-        /* Campos del formulario */
-        .form-group {
-            margin-bottom: 1.5rem;
-            position: relative;
-        }
-
-        .form-group label {
-            display: block;
-            color: #333;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .form-group label i {
-            color: #007bff;
-            margin-right: 0.5rem;
-        }
-
-        .input-container {
-            position: relative;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 1rem 1rem 1rem 3rem;
-            border: 2px solid #e1e5e9;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: #f8f9fa;
-            color: #333;
+            padding: 0;
             box-sizing: border-box;
         }
 
-        .form-group input:focus {
-            outline: none;
-            border-color: #007bff;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-            transform: translateY(-2px);
+        body {
+            min-height: 100vh;
+            max-height: 100vh;                  /* Limitar altura máxima */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: url('{{ url_for("static", filename="images/fondo.jpeg") }}') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 10px;                      /* Padding reducido */
+            position: relative;
+            overflow: hidden;                   /* Evitar scroll */
         }
 
-        .input-icon {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #6c757d;
-            font-size: 1.1rem;
-            transition: color 0.3s ease;
-        }
-
-        .form-group input:focus + .input-icon {
-            color: #007bff;
-        }
-
-        /* Botón de login */
-        .login-btn {
-            width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 1rem;
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-        }
-
-        .login-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
-            background: linear-gradient(135deg, #218838 0%, #1dc28b 100%);
-        }
-
-        .login-btn:active {
-            transform: translateY(0);
-        }
-
-        /* Mensajes de error */
-        .alert {
-            background: rgba(220, 53, 69, 0.1);
-            border: 1px solid rgba(220, 53, 69, 0.3);
-            color: #721c24;
-            padding: 1rem;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        .alert i {
-            color: #dc3545;
-            margin-right: 0.5rem;
-        }
-
-        /* Footer */
-        .login-footer {
-            background: #f8f9fa;
-            padding: 1rem;
-            text-align: center;
-            color: #6c757d;
-            font-size: 0.8rem;
-            border-top: 1px solid #e9ecef;
-        }
-
-        /* Efectos adicionales */
-        .floating-shapes {
+        /* Overlay sutil para contraste - MÁS NEUTRAL */
+        body::before {
+            content: "";
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            background: rgba(37, 50, 56, 0.15);
+            z-index: -1;
+        }
+
+        /* Contenedor principal - MÁS AMPLIO */
+        .login-container {
+            background: rgba(76, 76, 76, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(200, 200, 200, 0.08);
+            border-radius: 20px;                
+            padding: 25px 45px;                 /* Padding más amplio a los lados */
+            width: 100%;
+            max-width: 500px;                   /* Ancho máximo aumentado significativamente */
+            box-shadow: 
+                0 12px 25px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(200, 200, 200, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Título principal */
+        .login-title {
+            text-align: center;
+            color: #D4D4D4;
+            font-size: 2.2rem;                 /* Título más grande */
+            font-weight: 700;
+            margin-bottom: 8px;                /* Margen ajustado */
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+            letter-spacing: 0.5px;             /* Espaciado reducido */
+        }
+
+        .login-title i {
+            color: #A8A8A8;
+            margin-right: 10px;
+            filter: drop-shadow(0 0 10px rgba(168, 168, 168, 0.3));
+        }
+
+        /* Subtítulo */
+        .login-subtitle {
+            text-align: center;
+            color: rgba(200, 200, 200, 0.9);
+            font-size: 1.1rem;                 /* Fuente más grande */
+            margin-bottom: 20px;               /* Margen ajustado */
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+            font-weight: 400;
+        }
+
+        /* Texto de bienvenida */
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 15px;               /* Margen reducido */
+        }
+
+        .welcome-icon {
+            color: rgba(180, 180, 180, 0.9);
+            font-size: 2.2rem;                 /* Icono más pequeño */
+            margin-bottom: 5px;                /* Margen reducido */
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        .welcome-text {
+            color: rgba(200, 200, 200, 0.95);
+            font-size: 1.1rem;                 /* Texto más grande */
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            line-height: 1.4;                  /* Interlineado ajustado */
+        }
+
+        /* Formulario - MÁS COMPACTO */
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;                          /* Gap reducido */
+        }
+
+        /* Grupos de campos - MÁS COMPACTO */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;                           /* Gap reducido */
+        }
+
+        /* Labels - MÁS COMPACTAS */
+        .form-label {
+            color: rgba(180, 180, 180, 0.95);
+            font-weight: 600;
+            font-size: 1.1rem;                /* Fuente más grande */
+            text-transform: uppercase;
+            letter-spacing: 0.8px;             /* Espaciado ajustado */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 8px;                          /* Gap reducido */
+        }
+
+        .form-label i {
+            color: rgba(160, 160, 160, 0.8);
+            font-size: 1rem;                   /* Icono más pequeño */
+        }
+
+        /* Campos de entrada - MÁS COMPACTOS */
+        .form-input {
+            background: rgba(120, 120, 120, 0.04);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(160, 160, 160, 0.12);
+            border-radius: 12px;               /* Bordes menos redondeados */
+            padding: 14px 18px;                /* Padding ajustado */
+            color: #E0E0E0;
+            font-size: 1.1rem;                 /* Fuente más grande */
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+            width: 100%;
+        }
+
+        .form-input::placeholder {
+            color: rgba(180, 180, 180, 0.5);
+            font-style: italic;
+        }
+
+        .form-input:focus {
+            border-color: rgba(160, 160, 160, 0.25);
+            background: rgba(120, 120, 120, 0.06);
+            box-shadow: 
+                0 0 0 3px rgba(160, 160, 160, 0.05),
+                0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Botón de login - COLOR VERDE */
+        .login-button {
+            background: linear-gradient(135deg, #4CAF50, #45a049); /* Color verde */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(76, 175, 80, 0.3);   /* Borde verde */
+            border-radius: 12px;               
+            color: #ffffff;                     /* Texto blanco */
+            padding: 16px 28px;                /* Padding aumentado */
+            font-size: 1.2rem;                 /* Fuente más grande */
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;             
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            margin-top: 8px;                   
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3); /* Sombra verde */
+        }
+
+        .login-button:hover {
+            background: linear-gradient(135deg, #45a049, #388e3c); /* Verde más oscuro al hover */
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(76, 175, 80, 0.4);      /* Sombra verde más intensa */
+            border-color: rgba(76, 175, 80, 0.4);
+        }
+
+        .login-button:active {
+            transform: translateY(-1px);
+        }
+
+        /* Mensajes de error - MÁS COMPACTOS */
+        .alert {
+            background: rgba(255, 193, 7, 0.03);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 193, 7, 0.15);
+            border-radius: 10px;               /* Bordes menos redondeados */
+            color: rgba(255, 255, 255, 0.95);
+            padding: 12px;                     /* Padding reducido */
+            margin-bottom: 15px;               /* Margen reducido */
+            text-align: center;
+            font-weight: 500;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            font-size: 0.9rem;                 /* Fuente más pequeña */
+        }
+
+        .alert i {
+            color: rgba(255, 193, 7, 0.7);
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+
+        /* Footer interno */
+        .login-footer {
+            text-align: center;
+            color: rgba(170, 170, 170, 0.7);
+            font-size: 0.8rem;                 /* Fuente más pequeña */
+            margin-top: 15px;                  /* Margen reducido */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            line-height: 1.3;                  /* Interlineado más compacto */
+        }
+
+        .login-footer i {
+            color: rgba(160, 160, 160, 0.8);
+            margin-right: 5px;
+        }
+
+        .login-footer strong {
+            color: rgba(180, 180, 180, 0.9);
+        }
+
+        /* Efectos de partículas flotantes */
+        .floating-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
             pointer-events: none;
             z-index: -1;
         }
 
-        .shape {
+        .particle {
             position: absolute;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
+            animation: float 8s ease-in-out infinite;
         }
 
-        .shape:nth-child(1) {
-            width: 80px;
-            height: 80px;
+        .particle:nth-child(1) {
+            width: 20px;
+            height: 20px;
             top: 20%;
-            left: 10%;
+            left: 20%;
             animation-delay: 0s;
         }
 
-        .shape:nth-child(2) {
-            width: 60px;
-            height: 60px;
+        .particle:nth-child(2) {
+            width: 15px;
+            height: 15px;
             top: 60%;
-            right: 10%;
-            animation-delay: 2s;
+            right: 25%;
+            animation-delay: 3s;
         }
 
-        .shape:nth-child(3) {
-            width: 100px;
-            height: 100px;
-            bottom: 20%;
-            left: 20%;
-            animation-delay: 4s;
+        .particle:nth-child(3) {
+            width: 25px;
+            height: 25px;
+            bottom: 30%;
+            left: 15%;
+            animation-delay: 6s;
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0.3;
+            }
+            50% { 
+                transform: translateY(-15px) rotate(180deg);
+                opacity: 0.8;
+            }
         }
 
-        /* Responsive */
-        @media (max-width: 480px) {
-            .login-wrapper {
-                margin: 1rem;
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .login-container {
+                padding: 35px 25px;
+                margin: 15px;
                 max-width: none;
             }
             
-            .login-header h1 {
-                font-size: 1.5rem;
+            .login-title {
+                font-size: 1.8rem;
             }
             
-            .login-body {
-                padding: 1.5rem 1rem;
+            .login-subtitle {
+                font-size: 1rem;
+            }
+            
+            .welcome-icon {
+                font-size: 3rem;
+            }
+            
+            .form-input,
+            .login-button {
+                padding: 15px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            body {
+                padding: 10px;
+            }
+            
+            .login-container {
+                padding: 25px 20px;
+            }
+            
+            .login-title {
+                font-size: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Formas flotantes decorativas -->
-    <div class="floating-shapes">
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-    </div>
-
-    <!-- Contenedor principal del login -->
-    <div class="login-wrapper">
-        <!-- Header del login -->
-        <div class="login-header">
-            <h1><i class="fas fa-fish"></i> Piscícola Fish River</h1>
-            <div class="subtitle">Sistema de Gestión Acuícola</div>
+    <div class="login-container">
+        <!-- Partículas flotantes -->
+        <div class="floating-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
         </div>
 
-        <!-- Cuerpo del login -->
-        <div class="login-body">
-            <div class="welcome-text">
+        <!-- Encabezado -->
+        <h1 class="login-title">
+            <i class="fas fa-fish"></i>Sistema de Gestión
+        </h1>
+        <p class="login-subtitle">
+            Sistema de Gestión Acuícola
+        </p>
+
+        <!-- Sección de bienvenida -->
+        <div class="welcome-section">
+            <div class="welcome-icon">
                 <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="welcome-text">
                 <strong>Bienvenido</strong><br>
                 Accede a tu cuenta para gestionar la piscícola
             </div>
-
-            <!-- Mensajes de error -->
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-
-            <!-- Formulario de login -->
-            <form action="/login" method="POST">
-                <div class="form-group">
-                    <label for="usuario">
-                        <i class="fas fa-user"></i> Usuario
-                    </label>
-                    <div class="input-container">
-                        <input type="text" 
-                               id="usuario" 
-                               name="username" 
-                               placeholder="Ingresa tu nombre de usuario" 
-                               required 
-                               autocomplete="username">
-                        <i class="fas fa-user input-icon"></i>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="contraseña">
-                        <i class="fas fa-lock"></i> Contraseña
-                    </label>
-                    <div class="input-container">
-                        <input type="password" 
-                               id="contraseña" 
-                               name="password" 
-                               placeholder="Ingresa tu contraseña" 
-                               required 
-                               autocomplete="current-password">
-                        <i class="fas fa-lock input-icon"></i>
-                    </div>
-                </div>
-
-                <button type="submit" class="login-btn">
-                    <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
-                </button>
-            </form>
         </div>
 
-        <!-- Footer del login -->
-        <div class="login-footer">
-            <i class="fas fa-shield-alt"></i> 
-            Acceso seguro • Usuario por defecto: <strong>admin</strong>
-        </div>
+        <!-- Mensajes de error -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Formulario de login -->
+        <form action="/login" method="POST" class="login-form">
+            <div class="form-group">
+                <label for="username" class="form-label">
+                    <i class="fas fa-user"></i>
+                    Usuario
+                </label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username" 
+                    class="form-input"
+                    placeholder="Ingresa tu nombre de usuario" 
+                    required 
+                    autocomplete="username">
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">
+                    <i class="fas fa-lock"></i>
+                    Contraseña
+                </label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    class="form-input"
+                    placeholder="Ingresa tu contraseña" 
+                    required 
+                    autocomplete="current-password">
+            </div>
+
+            <button type="submit" class="login-button">
+                <i class="fas fa-sign-in-alt"></i>
+                Iniciar Sesión
+            </button>
+        </form>
     </div>
 
-    <!-- Footer general -->
-    <footer style="position: fixed; bottom: 10px; width: 100%; text-align: center; color: rgba(255,255,255,0.8); font-size: 0.8rem;">
-        <i class="fas fa-copyright"></i> 2025 Jersson Fabian Buitrago. Todos los derechos reservados.
-    </footer>
+    <!-- Copyright discreto -->
+    <div style="position: fixed; bottom: 10px; width: 100%; text-align: center; color: rgba(255,255,255,0.6); font-size: 0.75rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.4);">
+        © 2025 Jersson Fabian Buitrago. Todos los derechos reservados.
+    </div>
+
 </body>
 </html>

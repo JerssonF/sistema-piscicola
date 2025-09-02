@@ -9,9 +9,9 @@ app.config.from_object(Config)
 app.register_blueprint(routes_bp)
 
 if __name__ == '__main__':
-    # Configuración para servidor en red local
-    host = os.environ.get('FLASK_HOST', '0.0.0.0')  # Permite conexiones desde cualquier IP
-    port = int(os.environ.get('FLASK_PORT', 5000))  # Puerto configurable
+    # Configuración para desarrollo local
+    host = os.environ.get('FLASK_HOST', '0.0.0.0')
+    port = int(os.environ.get('PORT', 5000))  # Render usa PORT en lugar de FLASK_PORT
     debug = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
     
     print(f"🌐 Servidor iniciando en http://{host}:{port}")

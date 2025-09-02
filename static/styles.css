@@ -236,15 +236,19 @@ input[type="date"], input[type="time"], textarea {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(15px);
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 30px 40px;
-    border-radius: 8px;
+    border-radius: 20px;
     width: 100%;
     max-width: 500px;
     box-sizing: border-box;
     margin-bottom: 40px;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .login-container form label {
@@ -263,30 +267,52 @@ input[type="date"], input[type="time"], textarea {
     max-width: 400px;
     padding: 12px;
     font-size: 1.2em;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    background-color: #fff;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: white;
     margin: 5px 0;
     text-align: center;
     box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.login-container form input[type="text"]:focus,
+.login-container form input[type="password"]:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+.login-container form input[type="text"]::placeholder,
+.login-container form input[type="password"]::placeholder {
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .login-container form button {
-    background-color: #28a745;
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.8), rgba(32, 201, 151, 0.8));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     color: white;
     padding: 15px 30px;
     font-size: 1.2em;
     font-weight: bold;
-    border-radius: 8px;
-    border: none;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     cursor: pointer;
     margin-top: 20px;
     width: 60%;
     max-width: 300px;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
 }
 .login-container form button:hover {
-    background-color: #218838;
+    background: linear-gradient(135deg, rgba(33, 136, 56, 0.9), rgba(29, 194, 139, 0.9));
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
 }
 
 /*=====================================================================================

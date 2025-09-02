@@ -2,109 +2,252 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Piscícola Fish River</title>
+  <title>🐟 Piscícola Fish River - Sistema de Gestión</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
-    /* 1) Hacemos que body ocupe toda la altura y organice hijos en columna */
-    body {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    /* 2) El main crecerá para centrar su contenido */
-    main {
-      flex: 1;
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('{{ url_for('static', filename='images/fondo.jpeg') }}') center/cover fixed;
+      height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      color: #ffffff;
+      overflow: hidden;
+      padding-top: 30px;
+    }
+
+    /* HEADER - Parte Superior */
+    .header {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(25px);
+      padding: 12px 30px;
+      border-radius: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      text-align: center;
+      box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      margin: 0 15px 20px 15px;
+    }
+
+    .header h1 {
+      font-size: 2.5em;
+      font-weight: bold;
+      color: #ffffff;
+      text-shadow: 3px 3px 10px rgba(0,0,0,0.8);
+      margin: 0;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* CONTENIDO PRINCIPAL - Centro */
+    .main-content {
       display: flex;
       flex-direction: column;
-      justify-content: center; /* centra vertical */
-      align-items: center;     /* centra horizontal */
-      padding: 20px;           /* espacio lateral */
-    }
-
-    /* Cabecera */
-    .header {
-      text-align: center;
+      align-items: center;
+      justify-content: center;
+      gap: 35px;
+      padding: 20px;
       margin-top: 20px;
     }
-    .header h1 {
-      display: inline-block;
-      background: rgba(0, 0, 0, 0.6);   /* Fondo oscuro semitransparente */
-      color: #e0ffff;                   /* Blanco verdoso suave */
-      font-size: 4em;
-      padding: 0.2em 0.5em;             /* Relleno para separar del fondo */
-      border-radius: 8px;              /* Bordes redondeados */
-      text-shadow:
-        0 0 6px rgba(0,0,0,0.9),
-        0 0 10px rgba(0,255,255,0.7),
-        0 0 14px rgba(0,255,255,0.5);
-      margin: 0;
-    }
 
-    /* Contenedor de bienvenida (transparente) */
     .welcome-container {
-      background: rgba(255, 255, 255, 0.6);
-      color: #333;
-      padding: 20px;
-      max-width: 600px;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      color: #ffffff;
+      padding: 25px 40px;
+      max-width: 550px;
       width: 100%;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      border-radius: 25px;
+      box-shadow: 
+        0 20px 45px rgba(0, 0, 0, 0.4),
+        0 10px 25px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
       text-align: center;
-      margin-bottom: 20px;
-    }
-    .welcome-container h2 {
-      margin: 0 0 10px;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      position: relative;
+      overflow: hidden;
     }
 
-    /* Botón Ingresar */
+    .welcome-container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+    }
+
+    .welcome-container h2 {
+      font-size: 2em;
+      margin-bottom: 12px;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+      font-weight: 700;
+    }
+
+    .welcome-container p {
+      font-size: 1.1em;
+      margin-bottom: 0;
+      opacity: 0.95;
+      line-height: 1.4;
+      font-weight: 400;
+    }
+
     #btn-login-index {
-      background-color: #28a745;
-      color: #fff;
-      padding: 12px 24px;
+      background: linear-gradient(45deg, #4CAF50, #45a049);
+      color: white;
+      padding: 15px 40px;
+      text-decoration: none;
+      border-radius: 60px;
       font-size: 1.2em;
       font-weight: bold;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      text-decoration: none;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 
+        0 12px 30px rgba(76, 175, 80, 0.4),
+        0 6px 15px rgba(76, 175, 80, 0.3);
       display: inline-block;
-      text-shadow: 0 0 4px rgba(0,0,0,0.8);
-    }
-    #btn-login-index:hover {
-      background-color: #218838;
+      position: relative;
+      overflow: hidden;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
     }
 
-    /* Pie de página siempre al final */
-    footer {
+    #btn-login-index:hover {
+      transform: translateY(-4px);
+      box-shadow: 
+        0 18px 45px rgba(76, 175, 80, 0.5),
+        0 10px 25px rgba(76, 175, 80, 0.4);
+      background: linear-gradient(45deg, #45a049, #4CAF50);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    #btn-login-index::before {
+      content: "🐟";
+      margin-right: 10px;
+      font-size: 1.4em;
+      filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));
+      display: inline-block;
+      line-height: 1;
+    }
+
+    /* FOOTER - Parte Inferior */
+    .footer {
       text-align: center;
-      padding: 10px 0;
-      margin-top: auto;
-      color: #fff;
-      text-shadow: 0 0 4px rgba(0,0,0,0.8);
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9em;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+      padding: 15px;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      body {
+        padding-top: 20px;
+      }
+      
+      .header h1 {
+        font-size: 2.2em;
+      }
+      
+      .header {
+        margin: 0 15px 15px 15px;
+      }
+      
+      .main-content {
+        margin-top: 15px;
+      }
+      
+      .welcome-container {
+        width: 90%;
+        padding: 20px 25px;
+      }
+
+      .welcome-container h2 {
+        font-size: 1.7em;
+      }
+
+      .welcome-container p {
+        font-size: 1em;
+      }
+
+      #btn-login-index {
+        padding: 12px 30px;
+        font-size: 1.1em;
+      }
+      
+      .footer {
+        font-size: 0.8em;
+        padding: 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding-top: 15px;
+      }
+      
+      .header {
+        margin: 0 10px 12px 10px;
+        padding: 10px 20px;
+      }
+      
+      .header h1 {
+        font-size: 1.8em;
+        letter-spacing: 0.5px;
+      }
+      
+      .main-content {
+        gap: 20px;
+        padding: 15px;
+        margin-top: 10px;
+      }
+      
+      .welcome-container {
+        width: 95%;
+        padding: 18px 20px;
+      }
+      
+      .welcome-container h2 {
+        font-size: 1.5em;
+      }
+      
+      .footer {
+        font-size: 0.75em;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- CABECERA -->
+  <!-- HEADER - Parte Superior -->
   <header class="header">
-    <h1>Piscícola Fish River</h1>
+    <h1><i class="fas fa-fish"></i> Piscícola Fish River</h1>
   </header>
 
-  <!-- CONTENIDO PRINCIPAL, centrado por Flexbox -->
-  <main>
+  <!-- CONTENIDO PRINCIPAL - Centro -->
+  <main class="main-content">
     <div class="welcome-container">
-      <h2>Bienvenido a Piscícola Fish River</h2>
+      <h2><i class="fas fa-water"></i> Bienvenido al Sistema de Gestión</h2>
       <p>Accede con tu usuario para comenzar a gestionar la piscícola.</p>
     </div>
-  <a id="btn-login-index" href="{{ url_for('routes.login') }}">Ingresar</a>
+    
+    <a id="btn-login-index" href="{{ url_for('routes.login') }}">
+      <i class="fas fa-sign-in-alt"></i> Ingresar
+    </a>
   </main>
 
-  <!-- PIE DE PÁGINA -->
-  <footer>
-    <p>&copy; 2025 Jersson Fabian Buitrago. Todos los derechos reservados.</p>
+  <!-- FOOTER - Parte Inferior -->
+  <footer class="footer">
+    <p><i class="fas fa-copyright"></i> 2025 Jersson Fabian Buitrago. Todos los derechos reservados.</p>
   </footer>
 </body>
 </html>
