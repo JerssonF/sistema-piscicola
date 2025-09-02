@@ -10,36 +10,23 @@ from database_config import get_connection, init_db
 
 bp = Blueprint('routes', __name__)
 
-# ---------------------------------------
-# Conexión a la base de datos (SQLite)
-# ---------------------------------------
 def get_db_connection():
     """Conexión SQLite para producción"""
     try:
-        conn = get_connection()
-        print("✅ Conectado a la base de datos SQLite")
-        return conn
-    except Exception as e:
-        print(f"❌ Error de conexión a base de datos: {e}")
+        return get_connection()
+    except Exception:
         return None
 
-# ---------------------------------------
-# Ruta principal (índice)
-# ---------------------------------------
 @bp.route('/')
 def index():
     return render_template('index.html')
 
-# ---------------------------------------
-# Login
-# ---------------------------------------
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         user = request.form['username']
         pwd = request.form['password']
         
-        # Verificar en base de datos
         conn = get_db_connection()
         if conn:
             try:
@@ -54,17 +41,13 @@ def login():
                     return redirect(url_for('routes.dashboard'))
                 else:
                     flash("Usuario o contraseña incorrectos.", "error")
-            except Exception as e:
-                print(f"❌ Error en login: {e}")
+            except Exception:
                 flash("Error de conexión", "error")
         else:
             flash("Error de conexión a la base de datos", "error")
     
     return render_template('login.html')
 
-# ---------------------------------------
-# Dashboard
-# ---------------------------------------
 @bp.route('/dashboard')
 def dashboard():
     if not session.get('logged_in'):
@@ -78,20 +61,16 @@ def dashboard():
             cursor.execute("SELECT * FROM alimento ORDER BY fecha DESC LIMIT 10")
             rows = cursor.fetchall()
             
-            # Convertir a diccionarios
             columns = [description[0] for description in cursor.description]
             alimentos = [dict(zip(columns, row)) for row in rows]
             
-        except Exception as e:
-            print(f"❌ Error al leer 'alimento': {e}")
+        except Exception:
+            pass
         finally:
             conn.close()
     
     return render_template('dashboard.html', alimentos=alimentos)
 
-# ---------------------------------------
-# Formulario de Alimentos
-# ---------------------------------------
 @bp.route('/formulario_alimentos', methods=['GET', 'POST'])
 def formulario_alimentos():
     if not session.get('logged_in'):
@@ -106,12 +85,10 @@ def formulario_alimentos():
             cantidad = float(request.form['cantidad_alimento'])
             observaciones = request.form.get('observaciones', '')
             
-        except (ValueError, KeyError) as e:
+        except (ValueError, KeyError):
             flash("Verifica todos los campos del formulario.", "error")
-            print(f"❌ Error en formulario: {e}")
             return render_template('formulario_alimentos.html')
 
-        # Guardar en base de datos
         conn = get_db_connection()
         if conn:
             try:
@@ -123,11 +100,9 @@ def formulario_alimentos():
                 
                 conn.commit()
                 flash("Alimento guardado correctamente.", "success")
-                print("✅ Datos insertados en tabla alimento")
                 
-            except Exception as e:
+            except Exception:
                 flash("Error al guardar en la base de datos.", "error")
-                print(f"❌ SQL Alimento: {e}")
             finally:
                 conn.close()
         else:
@@ -137,9 +112,6 @@ def formulario_alimentos():
 
     return render_template('formulario_alimentos.html')
 
-# ---------------------------------------
-# Formulario de Ingreso de Alimento
-# ---------------------------------------
 @bp.route('/formulario_ingreso_alimento', methods=['GET', 'POST'])
 def formulario_ingreso_alimento():
     if not session.get('logged_in'):
@@ -153,7 +125,7 @@ def formulario_ingreso_alimento():
             cantidad = float(request.form['cantidad'])
             observaciones = request.form.get('observaciones', '')
             
-        except (ValueError, KeyError) as e:
+        except (ValueError, KeyError):
             flash("Verifica todos los campos del formulario.", "error")
             return render_template('formulario_ingreso_alimento.html')
 
@@ -169,9 +141,8 @@ def formulario_ingreso_alimento():
                 conn.commit()
                 flash("Ingreso guardado correctamente.", "success")
                 
-            except Exception as e:
+            except Exception:
                 flash("Error al guardar ingreso.", "error")
-                print(f"❌ SQL Ingreso: {e}")
             finally:
                 conn.close()
         else:
@@ -181,9 +152,6 @@ def formulario_ingreso_alimento():
 
     return render_template('formulario_ingreso_alimento.html')
 
-# ---------------------------------------
-# Formulario de Muestreo
-# ---------------------------------------
 @bp.route('/formulario_muestreo', methods=['GET', 'POST'])
 def formulario_muestreo():
     if not session.get('logged_in'):
@@ -199,7 +167,7 @@ def formulario_muestreo():
             cantidad_peces = int(request.form['peces'])
             observaciones = request.form.get('observaciones', '')
             
-        except (ValueError, KeyError) as e:
+        except (ValueError, KeyError):
             flash("Verifica todos los campos del formulario.", "error")
             return render_template('formulario_muestreo.html')
 
@@ -215,9 +183,8 @@ def formulario_muestreo():
                 conn.commit()
                 flash("Muestreo registrado correctamente.", "success")
                 
-            except Exception as e:
+            except Exception:
                 flash("Error al guardar muestreo.", "error")
-                print(f"❌ SQL Muestreo: {e}")
             finally:
                 conn.close()
         else:
@@ -227,9 +194,6 @@ def formulario_muestreo():
 
     return render_template('formulario_muestreo.html')
 
-# ---------------------------------------
-# Formulario de Parámetros
-# ---------------------------------------
 @bp.route('/formulario_parametros', methods=['GET', 'POST'])
 def formulario_parametros():
     if not session.get('logged_in'):
@@ -248,7 +212,7 @@ def formulario_parametros():
             nitrato = float(request.form.get('nitrato', 0))
             observaciones = request.form.get('observaciones', '')
             
-        except (ValueError, KeyError) as e:
+        except (ValueError, KeyError):
             flash("Verifica todos los campos del formulario.", "error")
             return render_template('formulario_parametros.html')
 
@@ -264,9 +228,8 @@ def formulario_parametros():
                 conn.commit()
                 flash("Parámetros registrados correctamente.", "success")
                 
-            except Exception as e:
+            except Exception:
                 flash("Error al guardar parámetros.", "error")
-                print(f"❌ SQL Parámetros: {e}")
             finally:
                 conn.close()
         else:
@@ -276,9 +239,6 @@ def formulario_parametros():
 
     return render_template('formulario_parametros.html')
 
-# ---------------------------------------
-# Formulario de Siembra
-# ---------------------------------------
 @bp.route('/formulario_siembra', methods=['GET', 'POST'])
 def formulario_siembra():
     if not session.get('logged_in'):
@@ -295,7 +255,7 @@ def formulario_siembra():
             proveedor = request.form.get('origen_semilla', '')
             observaciones = request.form.get('observaciones', '')
             
-        except (ValueError, KeyError) as e:
+        except (ValueError, KeyError):
             flash("Verifica todos los campos del formulario.", "error")
             return render_template('formulario_siembra.html')
         
@@ -311,9 +271,8 @@ def formulario_siembra():
                 conn.commit()
                 flash("Datos de siembra registrados correctamente.", "success")
                 
-            except Exception as e:
+            except Exception:
                 flash("Error al guardar los datos de siembra.", "error")
-                print(f"❌ SQL Siembra: {e}")
             finally:
                 conn.close()
         else:
@@ -323,9 +282,6 @@ def formulario_siembra():
 
     return render_template('formulario_siembra.html')
 
-# ---------------------------------------
-# Formulario de Informes
-# ---------------------------------------
 @bp.route('/formulario_informes', methods=['GET', 'POST'])
 def formulario_informes():
     if not session.get('logged_in'):
@@ -346,7 +302,6 @@ def formulario_informes():
             try:
                 cursor = conn.cursor()
                 
-                # Determinar qué tabla consultar
                 if formulario and formulario != "todos":
                     tablas_query = [formulario]
                 else:
@@ -355,11 +310,9 @@ def formulario_informes():
                 
                 for tabla in tablas_query:
                     try:
-                        # Construir consulta base
                         query = f"SELECT *, '{tabla}' as tipo FROM {tabla} WHERE 1=1"
                         params = []
                         
-                        # Filtros de fecha
                         if fecha_desde:
                             query += " AND fecha >= ?"
                             params.append(fecha_desde)
@@ -368,7 +321,6 @@ def formulario_informes():
                             query += " AND fecha <= ?"
                             params.append(fecha_hasta)
                         
-                        # Filtro de estanque
                         if estanque:
                             query += " AND estanque LIKE ?"
                             params.append(f"%{estanque}%")
@@ -378,22 +330,19 @@ def formulario_informes():
                         cursor.execute(query, params)
                         rows = cursor.fetchall()
                         
-                        # Convertir a diccionarios
                         columns = [description[0] for description in cursor.description]
                         registros_tabla = [dict(zip(columns, row)) for row in rows]
                         
                         resultados.extend(registros_tabla)
                         
-                    except Exception as e:
-                        print(f"Error consultando tabla {tabla}: {e}")
+                    except Exception:
                         continue
                 
-                # Ordenar por fecha descendente
                 if resultados:
                     resultados.sort(key=lambda x: x.get('fecha', ''), reverse=True)
                 
-            except Exception as e:
-                print(f"Error general en informes: {e}")
+            except Exception:
+                pass
             finally:
                 conn.close()
     
@@ -401,9 +350,6 @@ def formulario_informes():
                          resultados=resultados, 
                          formulario_seleccionado=formulario_seleccionado)
 
-# ---------------------------------------
-# Logout
-# ---------------------------------------
 @bp.route('/logout')
 def logout():
     session.clear()

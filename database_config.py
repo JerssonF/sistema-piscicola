@@ -1,19 +1,15 @@
 """
 🗄️ Configuración de Base de Datos SQLite para Producción
-Compatible con Render.com y despliegue en la nube
 """
 
 import sqlite3
 import os
-from pathlib import Path
 
 def get_db_path():
     """Obtiene la ruta de la base de datos"""
     if os.environ.get('RENDER'):
-        # En producción (Render), usar directorio temporal
         return '/tmp/piscicola.db'
     else:
-        # En desarrollo local
         return os.path.join(os.path.dirname(__file__), 'piscicola.db')
 
 def init_db():
@@ -107,12 +103,9 @@ def init_db():
         
         conn.commit()
         conn.close()
-        
-        print(f"✅ Base de datos inicializada correctamente en: {db_path}")
         return True
         
-    except Exception as e:
-        print(f"❌ Error inicializando base de datos: {e}")
+    except Exception:
         return False
 
 def get_connection():
@@ -132,18 +125,3 @@ def test_connection():
         return True, result[0]
     except Exception as e:
         return False, str(e)
-
-if __name__ == "__main__":
-    print("🗄️ INICIALIZANDO BASE DE DATOS SQLITE")
-    print("=====================================")
-    
-    # Inicializar base de datos
-    if init_db():
-        print("✅ Base de datos creada exitosamente")
-        
-        # Probar conexión
-        success, message = test_connection()
-        print(f"Prueba de conexión: {'✅ Exitosa' if success else '❌ Error'}")
-        print(f"Mensaje: {message}")
-    else:
-        print("❌ Error creando la base de datos")

@@ -54,4 +54,16 @@ Thumbs.db
 
 # Backup files
 *.backup
-routes/__init__.py.backup
+*_backup.*
+*_old.*
+*_temp.*
+
+# Test files
+test_*.py
+debug_*.py
+*_test.py
+
+# Documentation drafts
+*_TEMP.*
+*_OLD.*
+*_BACKUP.*
