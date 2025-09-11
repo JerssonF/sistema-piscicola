@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash, jsonify
 import sqlite3
 import datetime
 import sys
@@ -349,6 +349,93 @@ def formulario_informes():
     return render_template('formulario_informes_final.html', 
                          resultados=resultados, 
                          formulario_seleccionado=formulario_seleccionado)
+
+@bp.route('/filtrar_informes')
+def filtrar_informes():
+    print("🔍 RUTA FILTRAR_INFORMES LLAMADA")
+    print(f"📥 request.args: {dict(request.args)}")
+    
+    try:
+        formulario = request.args.get('formulario')
+        fecha_inicio = request.args.get('fecha_inicio')
+        fecha_fin = request.args.get('fecha_fin')
+        estanque = request.args.get('estanque')
+        
+        print(f"📋 Parámetros: formulario={formulario}, fecha_inicio={fecha_inicio}, fecha_fin={fecha_fin}, estanque={estanque}")
+        
+        if not formulario:
+            print("❌ No se especificó formulario")
+            return jsonify({'success': False, 'message': 'Formulario no especificado'})
+        
+        # Construir la consulta base según el formulario
+        if formulario == 'alimento':
+            query = "SELECT fecha, estanque, tipo_alimento, cantidad_kg as cantidad, observaciones FROM alimento WHERE 1=1"
+        elif formulario == 'muestreo':
+            query = "SELECT fecha, estanque, peso_promedio, cantidad_peces, (peso_promedio * cantidad_peces / 1000) as biomasa, observaciones FROM muestreo WHERE 1=1"
+        elif formulario == 'parametros':
+            query = "SELECT fecha, estanque, temperatura, ph, oxigeno, observaciones FROM parametros WHERE 1=1"
+        elif formulario == 'siembra':
+            query = "SELECT fecha, estanque, especie, cantidad as cantidad_alevinos, peso_promedio, observaciones FROM siembra WHERE 1=1"
+        else:
+            print(f"❌ Formulario no válido: {formulario}")
+            return jsonify({'success': False, 'message': f'Formulario no válido: {formulario}'})
+        
+        params = []
+        
+        # Agregar filtros opcionales
+        if fecha_inicio:
+            query += " AND fecha >= ?"
+            params.append(fecha_inicio)
+            
+        if fecha_fin:
+            query += " AND fecha <= ?"
+            params.append(fecha_fin)
+            
+        if estanque:
+            query += " AND estanque = ?"
+            params.append(estanque)
+        
+        query += " ORDER BY fecha DESC"
+        
+        print(f"🔍 Query: {query}")
+        print(f"📋 Params: {params}")
+        
+        # Ejecutar consulta
+        conn = get_db_connection()
+        if not conn:
+            print("❌ Error de conexión a la base de datos")
+            return jsonify({'success': False, 'message': 'Error de conexión a la base de datos'})
+        
+        try:
+            cursor = conn.cursor()
+            cursor.execute(query, params)
+            
+            # Obtener nombres de columnas
+            columns = [description[0] for description in cursor.description]
+            resultados = []
+            
+            for row in cursor.fetchall():
+                resultado = dict(zip(columns, row))
+                resultados.append(resultado)
+            
+            conn.close()
+            
+            print(f"✅ Consulta exitosa. Resultados: {len(resultados)}")
+            
+            return jsonify({
+                'success': True,
+                'datos': resultados,
+                'total': len(resultados)
+            })
+            
+        except Exception as e:
+            conn.close()
+            print(f"❌ Error en consulta: {str(e)}")
+            return jsonify({'success': False, 'message': f'Error en consulta: {str(e)}'})
+            
+    except Exception as e:
+        print(f"❌ Error interno: {str(e)}")
+        return jsonify({'success': False, 'message': f'Error interno: {str(e)}'})
 
 @bp.route('/logout')
 def logout():

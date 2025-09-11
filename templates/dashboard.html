@@ -462,13 +462,13 @@
   <nav class="nav">
     <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i> Menú</button>
     <ul id="menu" class="menu-list">
-      <li><a href="{{ url_for('routes.dashboard') }}" class="menu-item current-form"><i class="fas fa-home"></i> Inicio</a></li>
-      <li><a href="{{ url_for('routes.formulario_alimentos') }}" class="menu-item"><i class="fas fa-fish"></i> Alimentos</a></li>
-      <li><a href="{{ url_for('routes.formulario_ingreso_alimento') }}" class="menu-item"><i class="fas fa-plus-circle"></i> Ingreso Alimento</a></li>
-      <li><a href="{{ url_for('routes.formulario_muestreo') }}" class="menu-item"><i class="fas fa-microscope"></i> Muestreo</a></li>
-      <li><a href="{{ url_for('routes.formulario_parametros') }}" class="menu-item"><i class="fas fa-cogs"></i> Parámetros</a></li>
-      <li><a href="{{ url_for('routes.formulario_siembra') }}" class="menu-item"><i class="fas fa-seedling"></i> Siembra</a></li>
-      <li><a href="{{ url_for('routes.formulario_informes') }}" class="menu-item"><i class="fas fa-chart-bar"></i> Informes</a></li>
+      <li><a href="{{ url_for('dashboard') }}" class="menu-item current-form"><i class="fas fa-home"></i> Inicio</a></li>
+      <li><a href="{{ url_for('formulario_alimentos') }}" class="menu-item"><i class="fas fa-fish"></i> Alimentos</a></li>
+      <li><a href="{{ url_for('formulario_ingreso_alimento') }}" class="menu-item"><i class="fas fa-plus-circle"></i> Ingreso Alimento</a></li>
+      <li><a href="{{ url_for('formulario_muestreo') }}" class="menu-item"><i class="fas fa-microscope"></i> Muestreo</a></li>
+      <li><a href="{{ url_for('formulario_parametros') }}" class="menu-item"><i class="fas fa-cogs"></i> Parámetros</a></li>
+      <li><a href="{{ url_for('formulario_siembra') }}" class="menu-item"><i class="fas fa-seedling"></i> Siembra</a></li>
+      <li><a href="{{ url_for('formulario_informes') }}" class="menu-item"><i class="fas fa-chart-bar"></i> Informes</a></li>
     </ul>
   </nav>
 
@@ -486,42 +486,42 @@
       </div>
       
       <div class="features-grid">
-        <a href="{{ url_for('routes.formulario_alimentos') }}" class="feature-card-link">
+        <a href="{{ url_for('formulario_alimentos') }}" class="feature-card-link">
           <div class="feature-card">
             <i class="fas fa-fish feature-icon"></i>
             <h3>Formulario de Alimentos</h3>
             <p>Gestión de alimentación</p>
           </div>
         </a>
-        <a href="{{ url_for('routes.formulario_ingreso_alimento') }}" class="feature-card-link">
+        <a href="{{ url_for('formulario_ingreso_alimento') }}" class="feature-card-link">
           <div class="feature-card">
             <i class="fas fa-plus-circle feature-icon"></i>
             <h3>Ingreso de Alimento</h3>
             <p>Control de ingresos</p>
           </div>
         </a>
-        <a href="{{ url_for('routes.formulario_muestreo') }}" class="feature-card-link">
+        <a href="{{ url_for('formulario_muestreo') }}" class="feature-card-link">
           <div class="feature-card">
             <i class="fas fa-microscope feature-icon"></i>
             <h3>Muestreo</h3>
             <p>Análisis de muestras</p>
           </div>
         </a>
-        <a href="{{ url_for('routes.formulario_parametros') }}" class="feature-card-link">
+        <a href="{{ url_for('formulario_parametros') }}" class="feature-card-link">
           <div class="feature-card">
             <i class="fas fa-cogs feature-icon"></i>
             <h3>Parámetros</h3>
             <p>Control de calidad</p>
           </div>
         </a>
-        <a href="{{ url_for('routes.formulario_siembra') }}" class="feature-card-link">
+        <a href="{{ url_for('formulario_siembra') }}" class="feature-card-link">
           <div class="feature-card">
             <i class="fas fa-seedling feature-icon"></i>
             <h3>Siembra</h3>
             <p>Registro de siembras</p>
           </div>
         </a>
-        <a href="{{ url_for('routes.formulario_informes') }}" class="feature-card-link">
+        <a href="{{ url_for('formulario_informes') }}" class="feature-card-link">
           <div class="feature-card">
             <i class="fas fa-chart-bar feature-icon"></i>
             <h3>Informes</h3>

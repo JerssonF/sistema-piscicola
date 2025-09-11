@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Informes - Sistema Piscícola</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url("{{ url_for('static', filename='images/fondo.jpeg') }}") center/cover no-repeat fixed,
+                        linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            width: 100%;
+            padding: 10px; /* Padding mínimo */
+            overflow-x: auto; /* Permitir scroll horizontal si es necesario */
+        }
+        }
+
+        /* Contenedor principal extendido */
+        .container {
+            max-width: 100%; /* Ancho completo de la página */
+            width: 100%;
+            margin: 0;
+            padding: 0 20px; /* Solo padding lateral */
+            height: calc(100vh - 40px); /* Altura fija basada en viewport */
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            flex-shrink: 0; /* No se reduce */
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #ffffff;
+            text-shadow: 3px 3px 8px rgba(0,0,0,0.8), 
+                         1px 1px 4px rgba(0,0,0,0.9),
+                         0 0 20px rgba(255,255,255,0.3);
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Contenedor principal que cubre toda el área de filtros y botones */
+        .filters-wrapper {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            border-radius: 25px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            flex-shrink: 0;
+            width: 100%;
+            position: relative;
+            overflow: visible;
+        }
+
+        /* Contenedor del subtítulo dentro del filters-wrapper */
+        .subtitle-container {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .subtitle-container p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            margin: 0;
+            font-weight: 400;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .subtitle-container i {
+            margin-right: 8px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .form-container {
+            background: transparent; /* Sin fondo adicional ya que está dentro de filters-wrapper */
+            backdrop-filter: none;
+            border: none;
+            border-radius: 0;
+            padding: 0; /* Sin padding adicional */
+            height: auto; /* Altura automática */
+            overflow: visible;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 columnas iguales para los 4 campos */
+            gap: 10px; /* Gap muy reducido */
+            margin-bottom: 8px; /* Margen inferior muy reducido */
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            color: white;
+            font-weight: 500;
+            margin-bottom: 3px; /* Margen muy reducido */
+            font-size: 12px; /* Fuente más pequeña */
+        }
+
+        .form-group label i {
+            margin-right: 4px; /* Margen muy reducido */
+            color: #ffd700;
+        }
+
+        select, input {
+            padding: 6px 10px; /* Padding muy reducido */
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px; /* Border radius más pequeño */
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        select option {
+            background: #333;
+            color: white;
+        }
+
+        .btn {
+            padding: 6px 15px; /* Padding muy reducido */
+            border: none;
+            border-radius: 6px; /* Border radius más pequeño */
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            margin: 2px; /* Margen muy reducido */
+            font-size: 13px; /* Fuente más pequeña */
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(118, 75, 162, 0.5);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #ff6b6b 0%, #ff8e8e 100%);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(45deg, #ff8e8e 0%, #ff6b6b 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .loading {
+            text-align: center;
+            color: white;
+            margin: 20px 0;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .loading i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #ffd700;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results-container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 20px; /* Padding reducido para más espacio */
+            flex: 1; /* Toma el espacio restante disponible */
+            min-height: 400px; /* Altura mínima */
+            display: flex;
+            flex-direction: column;
+            width: 100%; /* Ancho completo disponible */
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        }
+
+        .results-title {
+            color: white;
+            margin-bottom: 20px;
+            text-align: center;
+            flex-shrink: 0; /* No se reduce cuando hay scroll */
+        }
+
+        .table-wrapper {
+            flex: 1;
+            overflow: visible; /* Sin scroll, mostrar todo */
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            margin: 20px 0;
+            width: 100%;
+        }
+            margin: 20px 0;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            table-layout: auto; /* Ancho automático para extender completamente */
+        }
+
+        /* Distribución proporcional de columnas - sin anchos fijos */
+        .results-table th:nth-child(1),
+        .results-table td:nth-child(1) { width: 3%; min-width: 35px; }     /* Id - Reducido */
+        
+        .results-table th:nth-child(2),
+        .results-table td:nth-child(2) { width: 8%; min-width: 80px; }     /* Fecha */
+        
+        .results-table th:nth-child(3),
+        .results-table td:nth-child(3) { width: 6%; min-width: 60px; }     /* Hora */
+        
+        .results-table th:nth-child(4),
+        .results-table td:nth-child(4) { 
+            width: 6%; 
+            min-width: 65px; 
+            max-width: 65px;
+            word-wrap: break-word;
+            line-height: 1.2;
+            white-space: normal;
+        }     /* Estanque/Celda - Ampliado */
+        
+        .results-table th:nth-child(5),
+        .results-table td:nth-child(5) { width: 12%; min-width: 120px; }   /* Referencia Alimento */
+        
+        .results-table th:nth-child(6),
+        .results-table td:nth-child(6) { width: 8%; min-width: 80px; }     /* Cantidad Alimento */
+        
+        .results-table th:nth-child(7),
+        .results-table td:nth-child(7) { width: 15%; min-width: 150px; }   /* Observaciones */
+        
+        .results-table th:nth-child(8),
+        .results-table td:nth-child(8) { width: 10%; min-width: 100px; }   /* Fecha Creación */
+        
+        .results-table th:nth-child(9),
+        .results-table td:nth-child(9) { width: 8%; min-width: 90px; }     /* Frecuencia Toma */
+        
+        .results-table th:nth-child(10),
+        .results-table td:nth-child(10) { width: 6%; min-width: 70px; }    /* Mortalidad */
+        
+        .results-table th:nth-child(11),
+        .results-table td:nth-child(11) { width: 10%; min-width: 110px; }  /* Causa Mortalidad */
+        
+        .results-table th:nth-child(12),
+        .results-table td:nth-child(12) { width: 14%; min-width: 130px; }  /* Acciones Correctivas */
+
+        /* Estilos específicos para formulario de PARÁMETROS - Solo columnas reales */
+        /* Cuando el formulario es 'parametros', ajustar anchos específicos */
+        [data-formulario="parametros"] .results-table th:nth-child(1),
+        [data-formulario="parametros"] .results-table td:nth-child(1) { width: 15%; min-width: 100px; }     /* Fecha */
+        
+        [data-formulario="parametros"] .results-table th:nth-child(2),
+        [data-formulario="parametros"] .results-table td:nth-child(2) { width: 8%; min-width: 60px; }     /* Estanque */
+        
+        [data-formulario="parametros"] .results-table th:nth-child(3),
+        [data-formulario="parametros"] .results-table td:nth-child(3) { width: 12%; min-width: 80px; }     /* Temperatura */
+        
+        [data-formulario="parametros"] .results-table th:nth-child(4),
+        [data-formulario="parametros"] .results-table td:nth-child(4) { width: 8%; min-width: 50px; }     /* pH */
+        
+        [data-formulario="parametros"] .results-table th:nth-child(5),
+        [data-formulario="parametros"] .results-table td:nth-child(5) { width: 12%; min-width: 70px; }     /* Oxígeno */
+        
+        [data-formulario="parametros"] .results-table th:nth-child(6),
+        [data-formulario="parametros"] .results-table td:nth-child(6) { width: 45%; min-width: 150px; }    /* Observaciones */
+        
+        [data-formulario="parametros"] .results-table th:nth-child(14),
+        [data-formulario="parametros"] .results-table td:nth-child(14) { width: 6%; min-width: 60px; }    /* Oxígeno Disuelto */
+        
+        [data-formulario="parametros"] .results-table th:nth-child(15),
+        [data-formulario="parametros"] .results-table td:nth-child(15) { width: 5%; min-width: 50px; }    /* Nitritos */
+
+        .results-table th,
+        .results-table td {
+            padding: 8px 4px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            word-wrap: break-word;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.2;
+            vertical-align: middle;
+            font-size: 0.75rem; /* Fuente más pequeña para que quepa mejor */
+        }
+
+        /* Títulos siempre centrados y mismo tamaño */
+        .results-table th {
+            text-align: center !important;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.2);
+            font-size: 0.75rem !important; /* Mismo tamaño para todos los títulos */
+            line-height: 1.1;
+            padding: 6px 4px; /* Padding uniforme */
+            vertical-align: middle;
+            white-space: nowrap; /* Evita saltos de línea innecesarios */
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Columna Estanque/Celda - diseño vertical compacto */
+        .results-table th:nth-child(4),
+        .results-table td:nth-child(4) {
+            text-align: center !important;
+            line-height: 1.0;
+            padding: 4px 2px;
+            font-size: 0.75rem !important; /* Mismo tamaño que todos los títulos */
+        }
+
+        /* Alineación específica por tipo de columna */
+        .results-table th:nth-child(1),
+        .results-table td:nth-child(1) { text-align: center; }  /* Id - centrado */
+        
+        .results-table th:nth-child(2),
+        .results-table td:nth-child(2) { text-align: center; }  /* Fecha - centrado */
+        
+        .results-table th:nth-child(3),
+        .results-table td:nth-child(3) { text-align: center; }  /* Hora - centrado */
+        
+        .results-table th:nth-child(4),
+        .results-table td:nth-child(4) { text-align: center; }  /* Estanque - centrado */
+        
+        .results-table th:nth-child(5),
+        .results-table td:nth-child(5) { text-align: left; padding-left: 12px; }   /* Referencia - izquierda */
+        
+        .results-table th:nth-child(6),
+        .results-table td:nth-child(6) { text-align: center; }  /* Cantidad - centrado */
+        
+        .results-table th:nth-child(7),
+        .results-table td:nth-child(7) { text-align: left; padding-left: 12px; }   /* Observaciones - izquierda */
+        
+        .results-table th:nth-child(8),
+        .results-table td:nth-child(8) { text-align: center; }  /* Fecha Creación - centrado */
+        
+        .results-table th:nth-child(9),
+        .results-table td:nth-child(9) { text-align: center; }  /* Frecuencia - centrado */
+        
+        .results-table th:nth-child(10),
+        .results-table td:nth-child(10) { text-align: center; } /* Mortalidad - centrado */
+        
+        .results-table th:nth-child(11),
+        .results-table td:nth-child(11) { text-align: left; padding-left: 12px; }  /* Causa - izquierda */
+        
+        .results-table th:nth-child(12),
+        .results-table td:nth-child(12) { text-align: left; padding-left: 12px; }  /* Acciones - izquierda */
+        .results-table th {
+            background: rgba(255, 255, 255, 0.15);
+            font-weight: 600;
+            color: #fff;
+            font-size: 0.9rem;
+            padding: 12px 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .results-table td {
+            padding: 8px;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .results-table tbody tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .results-table tbody tr:hover {
+            background: rgba(255, 193, 7, 0.1);
+        }
+            color: #ffd700;
+            font-size: 0.7rem; /* Texto más pequeño en encabezados */
+            padding: 6px 3px; /* Padding ligeramente mayor en encabezados */
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+            height: 30px; /* Altura fija para encabezados */
+            line-height: 1.0;
+        }
+
+        .results-table th:first-child {
+            background: rgba(255, 215, 0, 0.4);
+            color: #000;
+            font-weight: bold;
+        }
+
+        .results-table td:first-child {
+            background: rgba(255, 215, 0, 0.2);
+            font-weight: bold;
+        }
+
+        .results-table tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .results-table tr:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Ajustar altura específica de las filas */
+        .results-table tbody tr {
+            height: 28px; /* Altura fija y compacta para filas de datos */
+        }
+
+        .results-table tbody td {
+            font-size: 0.7rem; /* Texto aún más pequeño en celdas de datos */
+            padding: 2px 3px; /* Padding mínimo */
+            line-height: 1.0;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .alert-error {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            color: #fff;
+        }
+
+        .alert-info {
+            background: rgba(23, 162, 184, 0.2);
+            border: 1px solid rgba(23, 162, 184, 0.3);
+            color: #fff;
+        }
+
+        /* Estilos personalizados para scrollbars */
+        .table-wrapper::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .table-wrapper::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .table-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(255, 215, 0, 0.6);
+            border-radius: 4px;
+        }
+
+        .table-wrapper::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 215, 0, 0.8);
+        }
+
+        .form-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .form-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .form-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        /* Tooltip para mostrar texto completo */
+        .results-table td[title]:hover::after {
+            content: attr(title);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            white-space: normal;
+            max-width: 250px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            line-height: 1.3;
+        }
+
+        .results-table td[title]:hover {
+            position: relative;
+            overflow: visible;
+            z-index: 100;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .form-container {
+                height: 180px; /* Altura para móviles con campos apilados */
+                padding: 15px;
+            }
+            
+            .form-row {
+                grid-template-columns: repeat(2, 1fr); /* 2 columnas en móviles */
+                gap: 8px;
+            }
+            
+            .results-table {
+                font-size: 0.65rem; /* Texto aún más pequeño en móviles */
+            }
+            
+            .results-table th,
+            .results-table td {
+                padding: 2px 1px; /* Padding mínimo en móviles */
+            }
+
+            .results-table tbody tr {
+                height: 24px; /* Altura aún más compacta en móviles */
+            }
+
+            .results-table th {
+                height: 26px; /* Encabezados más compactos en móviles */
+                font-size: 0.6rem;
+            }
+            
+            .results-container {
+                height: 400px; /* Altura menor en móviles */
+                padding: 20px;
+            }
+            
+            .results-table {
+                min-width: 600px; /* Menos ancho mínimo en móviles */
+            }
+            
+            .results-table th,
+            .results-table td {
+                padding: 8px 10px;
+                font-size: 12px;
+                min-width: 60px;
+            }
+            
+            /* Indicador de scroll para móviles */
+            .table-wrapper::after {
+                content: "⬅ Desliza para ver más ➡";
+                display: block;
+                text-align: center;
+                font-size: 11px;
+                color: rgba(255, 255, 255, 0.6);
+                padding: 8px;
+                background: rgba(0, 0, 0, 0.2);
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                position: sticky;
+                bottom: 0;
+                left: 0;
+                right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="{{ url_for('dashboard') }}" class="back-button">
+        <i class="fas fa-arrow-left"></i> Volver al Dashboard
+    </a>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-chart-bar"></i> Informes y Consultas</h1>
+        </div>
+
+        <!-- Contenedor principal extendido que cubre toda el área de filtros, subtítulo y botones -->
+        <div class="filters-wrapper">
+            <!-- Subtítulo incluido dentro del contenedor -->
+            <div class="subtitle-container">
+                <p><i class="fas fa-info-circle"></i> Genera informes y consulta datos del sistema piscícola</p>
+            </div>
+            
+            <div class="form-container">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="formulario">
+                            <i class="fas fa-file-alt"></i> Seleccionar Formulario *
+                        </label>
+                        <select id="formulario" required>
+                            <option value="">-- Seleccionar Formulario --</option>
+                            <option value="alimento">Formulario de Alimentos</option>
+                            <option value="ingreso_alimentos">Formulario de Ingreso de Alimentos</option>
+                            <option value="muestreo">Formulario de Muestreo</option>
+                            <option value="parametros">Formulario de Parámetros</option>
+                            <option value="siembra">Formulario de Siembra</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="estanque">
+                            <i class="fas fa-water"></i> Estanque (Opcional)
+                        </label>
+                        <select id="estanque">
+                            <option value="">-- Todos los Estanques --</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fecha_inicio">
+                            <i class="fas fa-calendar"></i> Fecha Inicio (Opcional)
+                        </label>
+                        <input type="date" id="fecha_inicio">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fecha_fin">
+                            <i class="fas fa-calendar-check"></i> Fecha Fin (Opcional)
+                        </label>
+                        <input type="date" id="fecha_fin">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones integrados dentro del contenedor principal -->
+            <div class="buttons-container" style="text-align: center; margin: 15px 0; flex-shrink: 0;">
+                <button type="button" id="btnFiltrar" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Filtrar Datos
+                </button>
+                <button type="button" id="btnLimpiar" class="btn btn-secondary">
+                    <i class="fas fa-broom"></i> Limpiar Filtros
+                </button>
+            </div>
+        </div>
+
+        <!-- Área de resultados -->
+        <div id="loading" class="loading" style="display: none;">
+            <i class="fas fa-spinner fa-spin"></i> Cargando datos...
+        </div>
+
+        <div id="resultados" class="results-container" style="display: none;">
+            <h3 class="results-title">
+                <i class="fas fa-table"></i> Resultados de la Búsqueda
+                <span id="totalResultados"></span>
+            </h3>
+            <div class="table-wrapper">
+                <table class="results-table" id="tablaResultados">
+                    <thead id="encabezadoTabla"></thead>
+                    <tbody id="cuerpoTabla"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="mensajeError" class="alert alert-error" style="display: none;"></div>
+        <div id="mensajeInfo" class="alert alert-info" style="display: none;"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const btnFiltrar = document.getElementById('btnFiltrar');
+            const btnLimpiar = document.getElementById('btnLimpiar');
+            const loading = document.getElementById('loading');
+            const resultados = document.getElementById('resultados');
+            const mensajeError = document.getElementById('mensajeError');
+            const mensajeInfo = document.getElementById('mensajeInfo');
+
+            btnFiltrar.addEventListener('click', filtrarDatos);
+            btnLimpiar.addEventListener('click', limpiarFiltros);
+
+            function mostrarMensaje(elemento, mensaje) {
+                elemento.innerHTML = mensaje;
+                elemento.style.display = 'block';
+                setTimeout(() => {
+                    elemento.style.display = 'none';
+                }, 5000);
+            }
+
+            function limpiarMensajes() {
+                mensajeError.style.display = 'none';
+                mensajeInfo.style.display = 'none';
+                resultados.style.display = 'none';
+            }
+
+            function limpiarFiltros() {
+                document.getElementById('formulario').value = '';
+                document.getElementById('estanque').value = '';
+                document.getElementById('fecha_inicio').value = '';
+                document.getElementById('fecha_fin').value = '';
+                limpiarMensajes();
+            }
+
+            async function filtrarDatos() {
+                const formulario = document.getElementById('formulario').value;
+                
+                if (!formulario) {
+                    mostrarMensaje(mensajeError, '<i class="fas fa-exclamation-triangle"></i> Por favor selecciona un formulario');
+                    return;
+                }
+
+                limpiarMensajes();
+                loading.style.display = 'block';
+
+                try {
+                    // Construir URL con parámetros
+                    const params = new URLSearchParams();
+                    params.append('formulario', formulario);
+                    
+                    const estanque = document.getElementById('estanque').value;
+                    if (estanque) params.append('estanque', estanque);
+                    
+                    const fechaInicio = document.getElementById('fecha_inicio').value;
+                    if (fechaInicio) params.append('fecha_inicio', fechaInicio);
+                    
+                    const fechaFin = document.getElementById('fecha_fin').value;
+                    if (fechaFin) params.append('fecha_fin', fechaFin);
+
+                    console.log('Enviando petición a:', `/filtrar_informes?${params.toString()}`);
+
+                    const response = await fetch(`/filtrar_informes?${params.toString()}`);
+                    const data = await response.json();
+
+                    // Almacenar respuesta globalmente para uso en mostrarResultados
+                    window.currentResponse = data;
+
+                    loading.style.display = 'none';
+
+                    if (data.success) {
+                        // Siempre mostrar el contenedor de resultados para mantener estabilidad
+                        resultados.style.display = 'block';
+                        
+                        if (data.datos && data.datos.length > 0) {
+                            mostrarResultados(data.datos, data.total, data.columnas, data.formulario);
+                        } else {
+                            mostrarSinResultados(data.formulario);
+                        }
+                    } else {
+                        mostrarMensaje(mensajeError, `<i class="fas fa-exclamation-triangle"></i> Error: ${data.message}`);
+                    }
+
+                } catch (error) {
+                    loading.style.display = 'none';
+                    console.error('Error:', error);
+                    mostrarMensaje(mensajeError, `<i class="fas fa-exclamation-triangle"></i> Error de conexión: ${error.message}`);
+                }
+            }
+
+            function mostrarResultados(datos, total, columnas, formulario) {
+                // Agregar atributo para identificar el formulario actual
+                var resultadosDiv = document.getElementById('resultados');
+                resultadosDiv.setAttribute('data-formulario', formulario);
+                
+                if (!datos || datos.length === 0) {
+                    mostrarMensaje(mensajeInfo, '<i class="fas fa-info-circle"></i> No se encontraron resultados');
+                    return;
+                }
+
+                // Actualizar contador y tipo de formulario
+                document.getElementById('totalResultados').textContent = `(${total} registros de ${getFormularioName(formulario)})`;
+
+                // CRÍTICO: Usar SIEMPRE el orden de columnas_sql del backend
+                let columnasData;
+                
+                // FORZAR columnas específicas para cada formulario
+                if (formulario === 'parametros') {
+                    // Solo las 6 columnas que existen en la consulta SQL para parámetros
+                    columnasData = ['fecha', 'estanque', 'temperatura', 'ph', 'oxigeno', 'observaciones'];
+                } else {
+                    // Para otros formularios usar las del backend o la lista por defecto
+                    columnasData = window.currentResponse && window.currentResponse.columnas_sql ? 
+                        window.currentResponse.columnas_sql : 
+                        ['Id', 'fecha', 'hora', 'estanque_celda', 'referencia_alimento', 'cantidad_alimento', 'observaciones', 'created_at', 'mortalidad', 'causa_mortalidad', 'acciones_correctivas'];
+                    
+                    // FILTRO: Eliminar siempre frecuencia_toma ya que no existe en parámetros
+                    columnasData = columnasData.filter(col => col !== 'frecuencia_toma');
+                }
+                
+                // Usar las columnas proporcionadas por el backend en el orden correcto
+                const nombresColumnas = columnas || columnasData.map(col => formatearNombreColumna(col));
+
+                console.log('🔍 DEBUGGING ORDEN DE COLUMNAS:');
+                console.log('Formulario:', formulario);
+                console.log('Columnas SQL del backend:', window.currentResponse?.columnas_sql);
+                console.log('Columnas finales usadas:', columnasData);
+                console.log('Nombres de columnas para mostrar:', nombresColumnas);
+                console.log('Claves en primer registro:', Object.keys(datos[0]));
+                console.log('Verificando primer valor de cada columna:');
+                columnasData.forEach((col, idx) => {
+                    console.log(`  ${idx+1}. ${col}: ${datos[0][col]}`);
+                });
+
+                // Crear encabezado con iconos específicos según el tipo de columna
+                const encabezado = document.getElementById('encabezadoTabla');
+                encabezado.innerHTML = nombresColumnas.map((nombre, index) => {
+                    let icono = 'fas fa-info-circle';
+                    
+                    // Iconos específicos según el tipo de columna
+                    if (nombre === '#') icono = 'fas fa-hashtag';
+                    else if (nombre.includes('Fecha')) icono = 'fas fa-calendar';
+                    else if (nombre.includes('Hora')) icono = 'fas fa-clock';
+                    else if (nombre.includes('Estanque')) icono = 'fas fa-water';
+                    else if (nombre.includes('Alimento')) icono = 'fas fa-fish';
+                    else if (nombre.includes('Cantidad') || nombre.includes('kg')) icono = 'fas fa-weight';
+                    else if (nombre.includes('Peso')) icono = 'fas fa-balance-scale';
+                    else if (nombre.includes('Temperatura')) icono = 'fas fa-thermometer-half';
+                    else if (nombre.includes('pH')) icono = 'fas fa-vial';
+                    else if (nombre.includes('Oxígeno')) icono = 'fas fa-wind';
+                    else if (nombre.includes('Especie')) icono = 'fas fa-dna';
+                    else if (nombre.includes('Proveedor')) icono = 'fas fa-truck';
+                    else if (nombre.includes('Observaciones')) icono = 'fas fa-comment';
+                    
+                    return `<th><i class="${icono}"></i> ${nombre}</th>`;
+                }).join('');
+
+                // Crear filas usando el orden correcto de columnas_sql
+                const cuerpo = document.getElementById('cuerpoTabla');
+                cuerpo.innerHTML = datos.map((fila, filaIndex) => {
+                    const celdas = columnasData.map((col, colIndex) => {
+                        let valor = fila[col] || '-';
+                        let textoCompleto = valor; // Guardar el texto completo para el title
+                        
+                        // Formatear ciertos valores
+                        if (col.includes('fecha') && valor !== '-') {
+                            valor = new Date(valor).toLocaleDateString('es-ES');
+                        }
+                        
+                        // Truncar texto largo para celdas específicas
+                        if (typeof valor === 'string' && valor.length > 20) {
+                            if (col.includes('observaciones') || col.includes('alimento') || col.includes('causa') || col.includes('acciones')) {
+                                valor = valor.substring(0, 18) + '...';
+                            }
+                        }
+                        
+                        // Estilo especial para la primera columna (ID consecutivo)
+                        if (colIndex === 0) {
+                            return `<td style="background: rgba(255, 215, 0, 0.3); font-weight: bold; text-align: center; color: #000;" title="${textoCompleto}">${valor}</td>`;
+                        }
+                        
+                        return `<td title="${textoCompleto}">${valor}</td>`;
+                    }).join('');
+                    return `<tr>${celdas}</tr>`;
+                }).join('');
+
+                resultados.style.display = 'block';
+                
+                // Debug: verificar que los datos están llegando correctamente
+                console.log('🔍 Verificando primer registro:');
+                if (datos[0]) {
+                    columnasData.forEach((col, index) => {
+                        console.log(`  ${index + 1}. ${col}: ${datos[0][col]}`);
+                    });
+                }
+            }
+
+            function mostrarSinResultados(formulario) {
+                // Mantener el contenedor visible pero mostrar mensaje de sin datos
+                document.getElementById('totalResultados').textContent = `(0 registros de ${getFormularioName(formulario)})`;
+                
+                const encabezado = document.getElementById('encabezadoTabla');
+                encabezado.innerHTML = '<th colspan="100%"><i class="fas fa-info-circle"></i> No hay datos disponibles</th>';
+                
+                const cuerpo = document.getElementById('cuerpoTabla');
+                cuerpo.innerHTML = '<tr><td colspan="100%" style="text-align: center; padding: 40px; color: rgba(255,255,255,0.7);"><i class="fas fa-search"></i><br><br>No se encontraron datos con los filtros aplicados.<br>Intenta ajustar los criterios de búsqueda.</td></tr>';
+                
+                resultados.style.display = 'block';
+            }
+
+            function getFormularioName(formulario) {
+                const nombres = {
+                    'alimento': 'Alimentos',
+                    'muestreo': 'Muestreo',
+                    'parametros': 'Parámetros',
+                    'siembra': 'Siembra'
+                };
+                return nombres[formulario] || formulario;
+            }
+
+            function formatearNombreColumna(nombre) {
+                const nombres = {
+                    'fecha': 'Fecha',
+                    'estanque': 'Estanque',
+                    'tipo_alimento': 'Tipo de Alimento',
+                    'cantidad': 'Cantidad',
+                    'cantidad_kg': 'Cantidad (kg)',
+                    'observaciones': 'Observaciones',
+                    'peso_promedio': 'Peso Promedio',
+                    'cantidad_peces': 'Cantidad Peces',
+                    'biomasa': 'Biomasa',
+                    'temperatura': 'Temperatura',
+                    'ph': 'pH',
+                    'oxigeno': 'Oxígeno',
+                    'especie': 'Especie',
+                    'cantidad_alevinos': 'Cantidad Alevinos'
+                };
+                return nombres[nombre] || nombre.charAt(0).toUpperCase() + nombre.slice(1);
+            }
+        });
+    </script>
+</body>
+</html>

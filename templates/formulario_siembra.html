@@ -5,7 +5,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Formulario de Siembra - Piscícola Fish River</title>
+  <title>🐟 Piscícola Fish River 〰️ - Siembra</title>
   <style>
     /* ESTILOS GENERALES */
     * {
@@ -82,16 +82,14 @@
 
     /* Título grande "Piscícola Fish River" */
     .header h1 {
-      font-size: 4em;
+      font-size: 2.5em;
       font-weight: bold;
       color: #ffffff;
-      text-shadow:
-        0 0 15px rgba(231, 245, 245, 0.8),
-        0 0 30px rgba(0, 255, 255, 0.6),
-        0 0 45px rgba(0, 255, 255, 0.4);
-      margin-top: -10px;
-      margin-bottom: 20px;
+      margin: 0 auto 10px auto;
+      padding: 10px 0;
       text-align: center;
+      display: block;
+      width: 100%;
     }
 
     /* ─── ESTILOS DEL CONTENEDOR DEL FORMULARIO ─── */
@@ -288,24 +286,23 @@
   <nav class="nav">
     <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i> Menú</button>
     <ul id="menu" class="menu-list">
-      <li><a href="{{ url_for('routes.dashboard') }}" class="menu-item"><i class="fas fa-home"></i> Inicio</a></li>
-      <li><a href="{{ url_for('routes.formulario_alimentos') }}" class="menu-item"><i class="fas fa-fish"></i> Formulario de Alimentos</a></li>
-      <li><a href="{{ url_for('routes.formulario_ingreso_alimento') }}" class="menu-item"><i class="fas fa-plus-circle"></i> Formulario de Ingreso de Alimento</a></li>
-      <li><a href="{{ url_for('routes.formulario_muestreo') }}" class="menu-item"><i class="fas fa-microscope"></i> Formulario de Muestreo</a></li>
-      <li><a href="{{ url_for('routes.formulario_parametros') }}" class="menu-item"><i class="fas fa-cogs"></i> Formulario de Parámetros</a></li>
-      <li><a href="{{ url_for('routes.formulario_siembra') }}" class="menu-item current-form"><i class="fas fa-seedling"></i> Formulario de Siembra</a></li>
-      <li><a href="{{ url_for('routes.formulario_informes') }}" class="menu-item"><i class="fas fa-chart-bar"></i> Informes</a></li>
+      <li><a href="{{ url_for('dashboard') }}" class="menu-item"><i class="fas fa-home"></i> Inicio</a></li>
+      <li><a href="{{ url_for('formulario_alimentos') }}" class="menu-item"><i class="fas fa-fish"></i> Formulario de Alimentos</a></li>
+      <li><a href="{{ url_for('formulario_muestreo') }}" class="menu-item"><i class="fas fa-microscope"></i> Formulario de Muestreo</a></li>
+      <li><a href="{{ url_for('formulario_parametros') }}" class="menu-item"><i class="fas fa-cogs"></i> Formulario de Parámetros</a></li>
+      <li><a href="{{ url_for('formulario_siembra') }}" class="menu-item current-form"><i class="fas fa-seedling"></i> Formulario de Siembra</a></li>
+      <li><a href="{{ url_for('formulario_informes') }}" class="menu-item"><i class="fas fa-chart-bar"></i> Informes</a></li>
     </ul>
   </nav>
 
   <!-- ─── CABECERA PRINCIPAL ─── -->
-  <header class="header">
-    <h1><i class="fas fa-fish"></i> Piscícola Fish River <i class="fas fa-water"></i></h1>
+  <header class="header" style="display: flex; justify-content: center; align-items: center; width: 100%; padding: 10px 0;">
+    <h1>🐟 Piscícola Fish River 〰️</h1>
   </header>
 
   <!-- ─── FORMULARIO DE SIEMBRA EN CONTENEDOR ─── -->
   <div class="siembra-container">
-    <form method="POST" class="siembra-form">
+    <form action="{{ url_for('formulario_siembra') }}" method="POST" class="siembra-form">
       <h2 class="titulo-form"><i class="fas fa-seedling"></i> Formulario de Siembra</h2>
 
       <!-- 1) Frecuencia de la toma de información -->

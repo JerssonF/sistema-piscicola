@@ -3,52 +3,426 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario de Informes - Sistema Piscícola</title>
+    <title>Informes y Consultas - Sistema Piscícola</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
-        /* Prevenir movimientos no deseados */
-        .container {
-            position: relative;
-            max-width: 1400px;
-            width: 95%;
-            margin: 0 auto;
-            padding: 30px;
-            min-height: 100vh;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: url('{{ url_for("static", filename="images/fondo.jpeg") }}') no-repeat center center fixed;
-            background-size: cover;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            overflow-x: hidden;
-            overflow-y: auto;
+            padding: 20px;
             position: relative;
-            margin: 0;
-            padding: 20px 0;
         }
-        
-        /* Desactivar animaciones durante las búsquedas */
-        .formulario-container,
-        .results-container,
-        .filters-form,
-        .results-table {
-            animation: none !important;
-            transition: none !important;
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('{{ url_for("static", filename="images/fondo.jpeg") }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.3;
+            z-index: -1;
         }
-        
-        /* Mantener elementos en su lugar */
-        .formulario-container * {
-            transform: none !important;
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        
-        .results-container * {
-            transform: none !important;
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
         }
-        
-        /* Estilos específicos para el formulario de informes */
-        .formulario-container {
+
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1rem;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+        }
+
+        .form-group select option {
+            background: #333;
+            color: white;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .tabla-container {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        .tabla-resultados {
+            width: 100%;
+            border-collapse: collapse;
+            color: white;
+        }
+
+        .tabla-resultados th,
+        .tabla-resultados td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .tabla-resultados th {
+            background: rgba(255, 255, 255, 0.2);
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .tabla-resultados tbody tr:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .no-data, .error {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .error {
+            background: rgba(220, 53, 69, 0.3);
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .tabla-resultados {
+                font-size: 12px;
+            }
+            
+            .tabla-resultados th,
+            .tabla-resultados td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="{{ url_for('dashboard') }}" class="back-button">
+        <i class="fas fa-arrow-left"></i> Volver al Dashboard
+    </a>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-chart-bar"></i> Informes y Consultas</h1>
+            <p>Genera informes y consulta datos del sistema piscícola</p>
+        </div>
+
+        <div class="form-container">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="formulario">
+                        <i class="fas fa-file-alt"></i> Seleccionar Formulario *
+                    </label>
+                    <select id="formulario" required>
+                        <option value="">-- Seleccionar Formulario --</option>
+                        <option value="alimento">Formulario de Alimentos</option>
+                        <option value="muestreo">Formulario de Muestreo</option>
+                        <option value="parametros">Formulario de Parámetros</option>
+                        <option value="siembra">Formulario de Siembra</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="estanque">
+                        <i class="fas fa-water"></i> Estanque (Opcional)
+                    </label>
+                    <select id="estanque">
+                        <option value="">-- Todos los Estanques --</option>
+                        <option value="Estanque 1">Estanque 1</option>
+                        <option value="Estanque 2">Estanque 2</option>
+                        <option value="Estanque 3">Estanque 3</option>
+                        <option value="Estanque 4">Estanque 4</option>
+                        <option value="Estanque 5">Estanque 5</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="fecha_inicio">
+                        <i class="fas fa-calendar-alt"></i> Fecha Inicio (Opcional)
+                    </label>
+                    <input type="date" id="fecha_inicio">
+                </div>
+
+                <div class="form-group">
+                    <label for="fecha_fin">
+                        <i class="fas fa-calendar-alt"></i> Fecha Fin (Opcional)
+                    </label>
+                    <input type="date" id="fecha_fin">
+                </div>
+            </div>
+
+            <button type="button" id="filtrar-btn" class="btn-submit">
+                <i class="fas fa-search"></i> Filtrar Datos
+            </button>
+        </div>
+
+        <div id="resultados"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const formularioSelect = document.getElementById('formulario');
+            const fechaInicioInput = document.getElementById('fecha_inicio');
+            const fechaFinInput = document.getElementById('fecha_fin');
+            const estanqueInput = document.getElementById('estanque');
+            const filtrarBtn = document.getElementById('filtrar-btn');
+            const resultadosDiv = document.getElementById('resultados');
+
+            // Event listener para el botón de filtrar
+            filtrarBtn.addEventListener('click', function() {
+                const formulario = formularioSelect.value;
+                const fechaInicio = fechaInicioInput.value;
+                const fechaFin = fechaFinInput.value;
+                const estanque = estanqueInput.value;
+
+                console.log('📥 Filtros seleccionados:', {
+                    formulario, fechaInicio, fechaFin, estanque
+                });
+
+                if (!formulario) {
+                    alert('Por favor selecciona un formulario');
+                    return;
+                }
+
+                // Mostrar indicador de carga
+                resultadosDiv.innerHTML = '<div style="text-align: center; color: white; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> Cargando datos...</div>';
+
+                // Crear parámetros de consulta
+                const params = new URLSearchParams();
+                params.append('formulario', formulario);
+                if (fechaInicio) params.append('fecha_inicio', fechaInicio);
+                if (fechaFin) params.append('fecha_fin', fechaFin);
+                if (estanque) params.append('estanque', estanque);
+
+                const url = `/filtrar_informes?${params.toString()}`;
+                console.log('🔗 URL de consulta:', url);
+
+                // Realizar la consulta
+                fetch(url)
+                    .then(response => {
+                        console.log('📡 Respuesta recibida:', response.status);
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('📊 Datos recibidos:', data);
+                        if (data.success) {
+                            mostrarResultados(data.datos, formulario);
+                        } else {
+                            resultadosDiv.innerHTML = `<div class="error">Error: ${data.message}</div>`;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('❌ Error:', error);
+                        resultadosDiv.innerHTML = `<div class="error">Error al obtener los datos: ${error.message}</div>`;
+                    });
+            });
+
+            function mostrarResultados(datos, formulario) {
+                console.log(`📋 Mostrando ${datos.length} resultados para ${formulario}`);
+                
+                if (!datos || datos.length === 0) {
+                    resultadosDiv.innerHTML = '<div class="no-data">No se encontraron datos con los filtros aplicados</div>';
+                    return;
+                }
+
+                let html = '<div class="tabla-container">';
+                html += `<h3 style="color: white; margin-bottom: 15px; text-align: center;">📊 Resultados encontrados: ${datos.length}</h3>`;
+                html += '<table class="tabla-resultados">';
+                
+                // Encabezados según el formulario
+                html += '<thead><tr>';
+                
+                const headers = {
+                    'alimento': ['Fecha', 'Estanque', 'Tipo Alimento', 'Cantidad (kg)', 'Observaciones'],
+                    'muestreo': ['Fecha', 'Estanque', 'Peso Promedio', 'Cantidad Peces', 'Biomasa', 'Observaciones'],
+                    'parametros': ['Fecha', 'Estanque', 'Temperatura', 'pH', 'Oxígeno', 'Observaciones'],
+                    'siembra': ['Fecha', 'Estanque', 'Especie', 'Cantidad Alevinos', 'Peso Promedio', 'Observaciones']
+                };
+                
+                headers[formulario].forEach(header => {
+                    html += `<th>${header}</th>`;
+                });
+                
+                html += '</tr></thead><tbody>';
+                
+                // Datos
+                datos.forEach(row => {
+                    html += '<tr>';
+                    switch(formulario) {
+                        case 'alimento':
+                            html += `<td>${row.fecha || '-'}</td><td>${row.estanque || '-'}</td><td>${row.tipo_alimento || '-'}</td><td>${row.cantidad || '-'}</td><td>${row.observaciones || '-'}</td>`;
+                            break;
+                        case 'muestreo':
+                            html += `<td>${row.fecha || '-'}</td><td>${row.estanque || '-'}</td><td>${row.peso_promedio || '-'}</td><td>${row.cantidad_peces || '-'}</td><td>${row.biomasa || '-'}</td><td>${row.observaciones || '-'}</td>`;
+                            break;
+                        case 'parametros':
+                            html += `<td>${row.fecha || '-'}</td><td>${row.estanque || '-'}</td><td>${row.temperatura || '-'}</td><td>${row.ph || '-'}</td><td>${row.oxigeno || '-'}</td><td>${row.observaciones || '-'}</td>`;
+                            break;
+                        case 'siembra':
+                            html += `<td>${row.fecha || '-'}</td><td>${row.estanque || '-'}</td><td>${row.especie || '-'}</td><td>${row.cantidad_alevinos || '-'}</td><td>${row.peso_promedio || '-'}</td><td>${row.observaciones || '-'}</td>`;
+                            break;
+                    }
+                    html += '</tr>';
+                });
+                
+                html += '</tbody></table></div>';
+                resultadosDiv.innerHTML = html;
+            }
+        });
+    </script>
+</body>
+</html>
             background: rgba(255, 255, 255, 0.30);
             border-radius: 20px;
             padding: 25px;
@@ -432,7 +806,7 @@
         </h1>
       </div>
 
-      <form method="POST" class="filters-form">
+      <form action="{{ url_for('formulario_informes') }}" method="POST" class="filters-form">
         <div class="form-group">
           <label for="formulario"><i class="fas fa-list"></i> Tipo de Formulario:</label>
           <select name="formulario" id="formulario" required>
@@ -458,7 +832,7 @@
           <button type="submit" class="btn btn-primary">
             <i class="fas fa-search"></i> Buscar Información
           </button>
-          <a href="{{ url_for('routes.formulario_informes') }}" class="btn btn-secondary">
+          <a href="{{ url_for('formulario_informes') }}" class="btn btn-secondary">
             <i class="fas fa-broom"></i> Limpiar Filtro o Nueva Consulta
           </a>
           <div class="dropdown">
@@ -466,20 +840,20 @@
               <i class="fas fa-bars"></i> Menú de Formularios
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <a class="dropdown-item" href="{{ url_for('routes.formulario_alimentos') }}">
+              <a class="dropdown-item" href="{{ url_for('formulario_alimentos') }}">
                 <i class="fas fa-fish"></i> Formulario de Alimentos
               </a>
-              <a class="dropdown-item" href="{{ url_for('routes.formulario_ingreso_alimento') }}">
+              <a class="dropdown-item" href="{{ url_for('formulario_alimentos') }}">
                 <i class="fas fa-plus-circle"></i> Ingreso de Alimentos
               </a>
-              <a class="dropdown-item" href="{{ url_for('routes.formulario_muestreo') }}">
+              <a class="dropdown-item" href="{{ url_for('formulario_muestreo') }}">
                 <i class="fas fa-microscope"></i> Formulario de Muestreo
               </a>
-              <a class="dropdown-item" href="{{ url_for('routes.dashboard') }}">
+              <a class="dropdown-item" href="{{ url_for('dashboard') }}">
                 <i class="fas fa-home"></i> Dashboard Principal
               </a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="{{ url_for('routes.formulario_informes') }}">
+              <a class="dropdown-item" href="{{ url_for('formulario_informes') }}">
                 <i class="fas fa-chart-line"></i> Formulario de Informes
               </a>
             </div>

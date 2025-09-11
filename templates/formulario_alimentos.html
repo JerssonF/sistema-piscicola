@@ -251,24 +251,29 @@
   <nav class="nav">
     <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i> Menú</button>
     <ul id="menu" class="menu-list">
-      <li><a href="{{ url_for('routes.dashboard') }}" class="menu-item"><i class="fas fa-home"></i> Inicio</a></li>
-      <li><a href="{{ url_for('routes.formulario_alimentos') }}" class="menu-item current-form"><i class="fas fa-fish"></i> Formulario de Alimentos</a></li>
-      <li><a href="{{ url_for('routes.formulario_ingreso_alimento') }}" class="menu-item"><i class="fas fa-plus-circle"></i> Formulario de Ingreso de Alimento</a></li>
-      <li><a href="{{ url_for('routes.formulario_muestreo') }}" class="menu-item"><i class="fas fa-microscope"></i> Formulario de Muestreo</a></li>
-      <li><a href="{{ url_for('routes.formulario_parametros') }}" class="menu-item"><i class="fas fa-cogs"></i> Formulario de Parámetros</a></li>
-      <li><a href="{{ url_for('routes.formulario_siembra') }}" class="menu-item"><i class="fas fa-seedling"></i> Formulario de Siembra</a></li>
-      <li><a href="{{ url_for('routes.formulario_informes') }}" class="menu-item"><i class="fas fa-chart-bar"></i> Informes</a></li>
+      <li><a href="{{ url_for('dashboard') }}" class="menu-item"><i class="fas fa-home"></i> Inicio</a></li>
+      <li><a href="{{ url_for('formulario_alimentos') }}" class="menu-item current-form"><i class="fas fa-fish"></i> Formulario de Alimentos</a></li>
+      <li><a href="{{ url_for('formulario_alimentos') }}" class="menu-item"><i class="fas fa-plus-circle"></i> Formulario de Ingreso de Alimento</a></li>
+      <li><a href="{{ url_for('formulario_muestreo') }}" class="menu-item"><i class="fas fa-microscope"></i> Formulario de Muestreo</a></li>
+      <li><a href="{{ url_for('formulario_parametros') }}" class="menu-item"><i class="fas fa-cogs"></i> Formulario de Parámetros</a></li>
+      <li><a href="{{ url_for('formulario_siembra') }}" class="menu-item"><i class="fas fa-seedling"></i> Formulario de Siembra</a></li>
+      <li><a href="{{ url_for('formulario_informes') }}" class="menu-item"><i class="fas fa-chart-bar"></i> Informes</a></li>
     </ul>
   </nav>
 
   <!-- FORMULARIO EN CONTENEDOR OSCURO -->
   <div class="food-container">
-    <form id="alimentos-form" method="POST" class="food-form">
+    <form id="alimentos-form" method="POST" action="{{ url_for('formulario_alimentos') }}" class="food-form">
       <h2 class="titulo-form"><i class="fas fa-fish"></i> Formulario de Alimentos</h2>
 
       <div class="form-group">
         <label for="fecha"><i class="fas fa-calendar-alt"></i> Fecha:</label>
         <input type="date" id="fecha" name="fecha" required>
+      </div>
+
+      <div class="form-group">
+        <label for="hora"><i class="fas fa-clock"></i> Hora:</label>
+        <input type="time" id="hora" name="hora" required>
       </div>
 
       <div class="form-group">
