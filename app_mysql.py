@@ -168,6 +168,13 @@ def formulario_ingreso_alimento():
         try:
             fecha = request.form['fecha']
             hora = request.form['hora']
+            estanque = request.form.get('estanque', '')
+            referencia_alimento = request.form.get('referencia_alimento', '')
+            cantidad_alimento = float(request.form.get('cantidad_alimento', 0))
+            frecuencia_toma = request.form.get('frecuencia_toma', '')
+            mortalidad = int(request.form.get('mortalidad', 0))
+            causa_mortalidad = request.form.get('causa_mortalidad', '')
+            acciones_correctivas = request.form.get('acciones_correctivas', '')
             tipo_alimento = request.form['ingreso_comida']
             cantidad = float(request.form['cantidad'])
             observaciones = request.form.get('observaciones', '')
@@ -186,9 +193,12 @@ def formulario_ingreso_alimento():
             try:
                 cursor = conn.cursor()
                 cursor.execute('''
-                    INSERT INTO ingreso_alimentos (fecha, hora, ingreso_comida, cantidad, transporte, observaciones)
-                    VALUES (%s, %s, %s, %s, %s, %s)
-                ''', (fecha, hora, tipo_alimento, cantidad, transporte, observaciones))
+                    INSERT INTO ingreso_alimentos (fecha, hora, estanque, referencia_alimento, cantidad_alimento, 
+                                                 frecuencia_toma, mortalidad, causa_mortalidad, acciones_correctivas,
+                                                 ingreso_comida, cantidad, transporte, observaciones)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                ''', (fecha, hora, estanque, referencia_alimento, cantidad_alimento, frecuencia_toma, 
+                     mortalidad, causa_mortalidad, acciones_correctivas, tipo_alimento, cantidad, transporte, observaciones))
                 
                 conn.commit()
                 flash("Ingreso de alimentos guardado correctamente.", "success")
@@ -378,8 +388,8 @@ def filtrar_informes():
                 'columns': ['Id', 'Fecha', 'Hora', 'Estanque', 'Tipo Alimento', 'Cantidad (kg)', 'Frecuencia', 'Mortalidad', 'Causa Mortalidad', 'Acciones Correctivas', 'Observaciones']
             },
             'ingreso_alimentos': {
-                'query': "SELECT ROW_NUMBER() OVER (ORDER BY fecha DESC, hora DESC) as 'Id', fecha, hora, COALESCE(ingreso_comida, '') as ingreso_comida, COALESCE(cantidad, 0) as cantidad, COALESCE(transporte, '') as transporte, COALESCE(observaciones, '') as observaciones FROM ingreso_alimentos WHERE 1=1",
-                'columns': ['Id', 'Fecha', 'Hora', 'Ingreso Comida', 'Cantidad', 'Transporte', 'Observaciones']
+                'query': "SELECT ROW_NUMBER() OVER (ORDER BY fecha DESC, hora DESC) as Id, fecha, hora, COALESCE(estanque, '') as estanque_celda, COALESCE(referencia_alimento, '') as referencia_alimento, COALESCE(cantidad_alimento, 0) as cantidad_alimento, COALESCE(observaciones, '') as observaciones, COALESCE(fecha_creacion, '') as fecha_creacion, COALESCE(frecuencia_toma, '') as frecuencia_toma, COALESCE(mortalidad, 0) as mortalidad, COALESCE(causa_mortalidad, '') as causa_mortalidad, COALESCE(acciones_correctivas, '') as acciones_correctivas FROM ingreso_alimentos WHERE 1=1",
+                'columns': ['Id', 'Fecha', 'Hora', 'Estanque Celda', 'Referencia Alimento', 'Cantidad Alimento', 'Observaciones', 'Fecha Creación', 'Frecuencia Toma', 'Mortalidad', 'Causa Mortalidad', 'Acciones Correctivas']
             },
             'muestreo': {
                 'query': "SELECT ROW_NUMBER() OVER (ORDER BY fecha DESC, hora DESC) as 'Id', fecha, hora, estanque, COALESCE(especie, '') as especie, COALESCE(biomasa, 0) as biomasa, cantidad_peces, peso_promedio, talla_promedio, COALESCE(observaciones, '') as observaciones FROM muestreo WHERE 1=1",

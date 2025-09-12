@@ -16,8 +16,7 @@
             border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 15px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-            padding-top: 120px; /* Espacio aumentado para el contenedor fijo de filtros más bajo */
-            margin-top: 80px; /* Reducido para estar más cerca del header */
+            margin-top: 120px; /* Aumentado para dar espacio al título bajado */
         }
 
         .form-title {
@@ -25,17 +24,15 @@
             color: #ffffff;
             font-size: 2.2rem;
             margin-bottom: 1.5rem;
-            margin-top: -60px; /* Posición optimizada */
+            margin-top: 20px; /* Bajado para estar debajo del título principal */
             text-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
             font-weight: 600;
         }
 
-        /* Contenedor de filtros fijo */
+        /* Contenedor de filtros normal (no fijo) */
         .filters-container {
-            position: fixed;
-            top: 200px; /* Bajado considerablemente para dar espacio al título */
-            left: 50%;
-            transform: translateX(-50%);
+            position: relative;
+            margin: 20px auto;
             width: 92%;
             max-width: 1300px;
             background: rgba(0, 0, 0, 0.85);
@@ -43,7 +40,6 @@
             border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 12px;
             padding: 18px 25px;
-            z-index: 999;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
         }
 
@@ -304,19 +300,18 @@
             }
             
             .filters-container {
-                top: 180px;
                 width: 96%;
                 padding: 16px 18px;
+                margin: 15px auto;
             }
             
             .informes-container {
-                padding-top: 140px;
-                margin-top: 80px;
+                margin-top: 100px;
             }
 
             .form-title {
                 font-size: 2rem;
-                margin-top: -50px;
+                margin-top: 15px;
             }
         }
 
@@ -327,14 +322,13 @@
             }
             
             .filters-container {
-                top: 160px;
                 width: 96%;
                 padding: 15px;
+                margin: 10px auto;
             }
             
             .informes-container {
-                padding-top: 120px;
-                margin-top: 160px; /* Ajustado para la nueva posición de filtros */
+                margin-top: 80px;
                 margin-left: 10px;
                 margin-right: 10px;
                 padding-left: 15px;
@@ -358,7 +352,7 @@
 
             .form-title {
                 font-size: 1.8rem;
-                margin-top: -60px;
+                margin-top: 10px;
             }
 
             .form-group label {

@@ -162,11 +162,18 @@ def init_mysql_tables():
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 fecha DATE NOT NULL,
                 hora TIME NOT NULL,
+                estanque VARCHAR(50),
+                referencia_alimento VARCHAR(100),
+                cantidad_alimento DECIMAL(10,2) NOT NULL,
+                frecuencia_toma VARCHAR(100),
+                mortalidad INT DEFAULT 0,
+                causa_mortalidad TEXT,
+                acciones_correctivas TEXT,
                 ingreso_comida VARCHAR(100) NOT NULL,
                 cantidad DECIMAL(10,2) NOT NULL,
                 transporte VARCHAR(100),
                 observaciones TEXT,
-                fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
         ''')
         
